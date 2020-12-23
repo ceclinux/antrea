@@ -4,40 +4,40 @@ import (
 	"context"
 	time "time"
 
+	v1alpha1 "github.com/ceclinux/antrea/pkg/client/listers/stats/v1alpha1"
 	statsv1alpha1 "github.com/vmware-tanzu/antrea/pkg/apis/stats/v1alpha1"
 	versioned "github.com/vmware-tanzu/antrea/pkg/client/clientset/versioned"
 	internalinterfaces "github.com/vmware-tanzu/antrea/pkg/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "github.com/vmware-tanzu/antrea/pkg/client/listers/security/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// NetworkPolicyInformer provides access to a shared informer and lister for
+// AntreaNetworkPolicyInformer provides access to a shared informer and lister for
 // NetworkPolicies.
-type NetworkPolicyInformer interface {
+type AntreaNetworkPolicyStatsInformer interface {
 	Informer() cache.SharedIndexInformer
 	Lister() v1alpha1.NetworkPolicyLister
 }
 
-type networkPolicyInformer struct {
+type antreaNetworkPolicyStatsInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewNetworkPolicyInformer constructs a new informer for NetworkPolicy type.
+// AntreaNetworkPolicyStatsInformer constructs a new informer for NetworkPolicy type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewNetworkPolicyInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredNetworkPolicyInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewAntreaNetworkPolicyStatsInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredAntreaNetworkPolicyStatsInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredNetworkPolicyInformer constructs a new informer for NetworkPolicy type.
+// NewFilteredAntreaNetworkPolicyStatsInformer constructs a new informer for NetworkPolicy type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredNetworkPolicyInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredAntreaNetworkPolicyStatsInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
@@ -59,10 +59,14 @@ func NewFilteredNetworkPolicyInformer(client versioned.Interface, namespace stri
 	)
 }
 
-func (f *networkPolicyInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredNetworkPolicyInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *antreaNetworkPolicyStatsInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredAntreaNetworkPolicyStatsInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *networkPolicyInformer) Informer() cache.SharedIndexInformer {
+func (f *antreaNetworkPolicyStatsInformer) Informer() cache.SharedIndexInformer {
 	return f.factory.InformerFor(&statsv1alpha1.AntreaClusterNetworkPolicyStats{}, f.defaultInformer)
+}
+
+func (f *antreaNetworkPolicyStatsInformer) Lister() v1alpha1.AntreaNetworkPolicyStatsLister {
+	return v1alpha1.NewAntreaNetworkPolicyStatsLister(f.Informer().GetIndexer())
 }

@@ -41,6 +41,7 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/ti-mo/conntrack v0.3.0
 	github.com/vishvananda/netlink v1.1.0
+	github.com/vmware-tanzu/antrea v0.12.0
 	github.com/vmware/go-ipfix v0.4.2
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a
 	golang.org/x/exp v0.0.0-20190312203227-4b39c73a6495
@@ -73,4 +74,5 @@ replace (
 	// available from 1.19.0 and later releases. Use this commit before Antrea bumps up its K8s
 	// dependency version.
 	k8s.io/client-go => github.com/tnqn/client-go v0.18.4-1
+	github.com/ceclinux/antrea => ../antrea
 )
