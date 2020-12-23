@@ -21,6 +21,7 @@ import (
 	sync "sync"
 	time "time"
 
+	stats "github.com/ceclinux/antrea/pkg/client/informers/externalversions/stats"
 	versioned "github.com/vmware-tanzu/antrea/pkg/client/clientset/versioned"
 	clusterinformation "github.com/vmware-tanzu/antrea/pkg/client/informers/externalversions/clusterinformation"
 	core "github.com/vmware-tanzu/antrea/pkg/client/informers/externalversions/core"
@@ -177,6 +178,7 @@ type SharedInformerFactory interface {
 	Core() core.Interface
 	Ops() ops.Interface
 	Security() security.Interface
+	Stats() stats.Interface
 }
 
 func (f *sharedInformerFactory) Clusterinformation() clusterinformation.Interface {
@@ -193,4 +195,8 @@ func (f *sharedInformerFactory) Ops() ops.Interface {
 
 func (f *sharedInformerFactory) Security() security.Interface {
 	return security.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Stats() stats.Interface {
+	return stats.New(f, f.namespace, f.tweakListOptions)
 }

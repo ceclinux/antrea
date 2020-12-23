@@ -23,6 +23,7 @@ import (
 	v1alpha2 "github.com/vmware-tanzu/antrea/pkg/apis/core/v1alpha2"
 	v1alpha1 "github.com/vmware-tanzu/antrea/pkg/apis/ops/v1alpha1"
 	securityv1alpha1 "github.com/vmware-tanzu/antrea/pkg/apis/security/v1alpha1"
+	statsv1alpha1 "github.com/vmware-tanzu/antrea/pkg/apis/stats/v1alpha1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
 )
@@ -74,6 +75,13 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha1().NetworkPolicies().Informer()}, nil
 	case securityv1alpha1.SchemeGroupVersion.WithResource("tiers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Security().V1alpha1().Tiers().Informer()}, nil
+		// Group=security.antrea.tanzu.vmware.com, Version=v1alpha1
+	case statsv1alpha1.SchemeGroupVersion.WithResource("networkpolicystats"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Stats().V1alpha1().NetworkPolicyStats().Informer()}, nil
+	case statsv1alpha1.SchemeGroupVersion.WithResource("antreanetworkpolicystats"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Stats().V1alpha1().AntreaNetworkPolicyStats().Informer()}, nil
+	case statsv1alpha1.SchemeGroupVersion.WithResource("antreaclusternetworkpolicystats"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Stats().V1alpha1().AntreaClusterNetworkPolicyStats().Informer()}, nil
 
 	}
 
