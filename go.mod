@@ -1,4 +1,4 @@
-module github.com/vmware-tanzu/antrea
+module github.com/ceclinux/antrea
 
 go 1.15
 
