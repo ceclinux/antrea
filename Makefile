@@ -23,12 +23,12 @@ GRPID   := $(shell id -g)
 .PHONY: bin
 bin:
 	@mkdir -p $(BINDIR)
-	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' github.com/vmware-tanzu/antrea/cmd/...
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/...
 
 .PHONY: antrea-agent
 antrea-agent:
 	@mkdir -p $(BINDIR)
-	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' github.com/vmware-tanzu/antrea/cmd/antrea-agent
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/antrea-agent
 
 .PHONY: antrea-agent-simulator
 antrea-agent-simulator:
@@ -43,7 +43,7 @@ antrea-agent-instr-binary:
 .PHONY: antrea-controller
 antrea-controller:
 	@mkdir -p $(BINDIR)
-	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' github.com/vmware-tanzu/antrea/cmd/antrea-controller
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/antrea-controller
 
 .PHONY: .coverage
 .coverage:
@@ -57,12 +57,12 @@ antrea-controller-instr-binary:
 .PHONY: antrea-cni
 antrea-cni:
 	@mkdir -p $(BINDIR)
-	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' github.com/vmware-tanzu/antrea/cmd/antrea-cni
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/antrea-cni
 
 .PHONY: antctl-ubuntu
 antctl-ubuntu:
 	@mkdir -p $(BINDIR)
-	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' github.com/vmware-tanzu/antrea/cmd/antctl
+	GOOS=linux $(GO) build -o $(BINDIR) $(GOFLAGS) -ldflags '$(LDFLAGS)' ./cmd/antctl
 
 .PHONY: antctl-instr-binary
 antctl-instr-binary:

@@ -1270,14 +1270,14 @@ data:
     # Enable Antrea ClusterNetworkPolicy feature to complement K8s NetworkPolicy for cluster admins
     # to define security policies which apply to the entire cluster, and Antrea NetworkPolicy
     # feature that supports priorities, rule actions and externalEntities in the future.
-    #  AntreaPolicy: false
+      AntreaPolicy: true
 
     # Enable flowexporter which exports polled conntrack connections as IPFIX flow records from each
     # agent to a configured collector.
     #  FlowExporter: false
 
     # Enable collecting and exposing NetworkPolicy statistics.
-    #  NetworkPolicyStats: false
+      NetworkPolicyStats: true
 
     # Name of the OpenVSwitch bridge antrea-agent will create and use.
     # Make sure it doesn't conflict with your existing OpenVSwitch bridges.
@@ -1402,10 +1402,10 @@ data:
     # Enable Antrea ClusterNetworkPolicy feature to complement K8s NetworkPolicy for cluster admins
     # to define security policies which apply to the entire cluster, and Antrea NetworkPolicy
     # feature that supports priorities, rule actions and externalEntities in the future.
-    #  AntreaPolicy: false
+      AntreaPolicy: true
 
     # Enable collecting and exposing NetworkPolicy statistics.
-    #  NetworkPolicyStats: false
+      NetworkPolicyStats: true
 
     # The port for the antrea-controller APIServer to serve on.
     # Note that if it's set to another value, the `containerPort` of the `api` port of the
@@ -1498,7 +1498,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.serviceAccountName
-        image: projects.registry.vmware.com/antrea/antrea-ubuntu:latest
+        image: ceclinux/antrea-ubuntu:latest
         imagePullPolicy: IfNotPresent
         name: antrea-controller
         ports:
@@ -1670,7 +1670,7 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: projects.registry.vmware.com/antrea/antrea-ubuntu:latest
+        image: ceclinux/antrea-ubuntu:latest
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -1731,7 +1731,7 @@ spec:
         - --log_file_max_num=4
         command:
         - start_ovs
-        image: projects.registry.vmware.com/antrea/antrea-ubuntu:latest
+        image: ceclinux/antrea-ubuntu:latest
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -1766,7 +1766,7 @@ spec:
       initContainers:
       - command:
         - install_cni
-        image: projects.registry.vmware.com/antrea/antrea-ubuntu:latest
+        image: ceclinux/antrea-ubuntu:latest
         imagePullPolicy: IfNotPresent
         name: install-cni
         resources:

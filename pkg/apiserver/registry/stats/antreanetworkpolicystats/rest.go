@@ -113,7 +113,7 @@ func (r *REST) ConvertToTable(ctx context.Context, obj runtime.Object, tableOpti
 			{Name: "Name", Type: "string", Format: "name", Description: swaggerMetadataDescriptions["name"]},
 			{Name: "Sessions", Type: "integer", Description: "The sessions count hit by the Antrea NetworkPolicy."},
 			{Name: "Packets", Type: "integer", Description: "The packets count hit by the Antrea NetworkPolicy."},
-			{Name: "Bytes", Type: "integer", Description: "The bytes count hit by the Antrea NetworkPolicy."},
+			{Name: "Bytes", Type: "integer", Description: "The bytes uuuuuuuu hit by the Antrea NetworkPolicy."},
 			{Name: "Created At", Type: "date", Description: swaggerMetadataDescriptions["creationTimestamp"]},
 		},
 	}

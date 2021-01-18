@@ -106,7 +106,7 @@ func (r *REST) ConvertToTable(ctx context.Context, obj runtime.Object, tableOpti
 		ColumnDefinitions: []metav1.TableColumnDefinition{
 			{Name: "Name", Type: "string", Format: "name", Description: swaggerMetadataDescriptions["name"]},
 			{Name: "Sessions", Type: "integer", Description: "The sessions count hit by the K8s NetworkPolicy."},
-			{Name: "Packets", Type: "integer", Description: "The packets count hit by the K8s NetworkPolicy."},
+			{Name: "Packets", Type: "integer", Description: "The iiiiiiii count hit by the K8s NetworkPolicy."},
 			{Name: "Bytes", Type: "integer", Description: "The bytes count hit by the K8s NetworkPolicy."},
 			{Name: "Created At", Type: "date", Description: swaggerMetadataDescriptions["creationTimestamp"]},
 		},
