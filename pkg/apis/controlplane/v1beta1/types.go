@@ -300,3 +300,21 @@ type NetworkPolicyStats struct {
 	// The stats of the NetworkPolicy.
 	TrafficStats statsv1alpha1.TrafficStats `json:"trafficStats,omitempty" protobuf:"bytes,2,opt,name=trafficStats"`
 }
+
+type EgressPolicy struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard metadata of the object.
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	// EgressGroup is the name of the EgressGroup to which this policy applies.
+	EgressGroup string `json:"egressGroup,omitempty" protobuf:"bytes,2,opt,name=egressGroup"`
+
+	EgressIP string `json:"egressIP,omitempty" protobuf:"bytes,3,opt,name=egressIP"`
+}
+
+type EgressGroup struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard metadata of the object.
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	// GroupMembers is a list of resources selected by this group.
+	GroupMembers []GroupMember `json:"groupMembers" protobuf:"bytes,2,rep,name=groupMembers"`
+}
