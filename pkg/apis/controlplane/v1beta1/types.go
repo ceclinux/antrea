@@ -293,6 +293,12 @@ type NodeStatsSummary struct {
 	AntreaNetworkPolicies []NetworkPolicyStats `json:"antreaNetworkPolicies,omitempty" protobuf:"bytes,4,rep,name=antreaNetworkPolicies"`
 }
 
+type EgressPolicyList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []EgressPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
 // NetworkPolicyStats contains the information and traffic stats of a NetworkPolicy.
 type NetworkPolicyStats struct {
 	// The reference of the NetworkPolicy.
@@ -302,7 +308,7 @@ type NetworkPolicyStats struct {
 }
 
 // +genclient
-// +genclient:onlyVerbs=get,watch
+// +genclient:onlyVerbs=list,get,watch
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicy struct {
 	metav1.TypeMeta `json:",inline"`
