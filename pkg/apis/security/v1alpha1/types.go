@@ -20,6 +20,49 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+type EgressPolicyList struct {
+	metav1.TypeMeta `json:",inline"`
+	// +optional
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []EgressPolicy `json:"items"`
+}
+
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type EgressPolicy struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard metadata of the object.
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	// Specification of the desired behavior of EgressPolicy.
+	Spec EgressPolicySpec `json:"spec"`
+}
+
+// EgressPolicySpec defines the desired state for EgressPolicy.
+type EgressPolicySpec struct {
+	// AppliedTo selects Pods to which the policy will be applied.
+	AppliedTo AppliedTo
+	// EgressIP specifies the SNAT IP address for the selected Pods.
+	EgressIP string
+}
+
+// AppliedTo defines the workloads to which a policy is applied.
+type AppliedTo struct {
+	// Select Pods matched by this selector. If set with NamespaceSelector,
+	// Pods are matched from Namespaces matched by the NamespaceSelector;
+	// otherwise, Pods are matched from all Namespaces.
+	// +optional
+	PodSelector *metav1.LabelSelector `json:"podSelector,omitempty"`
+	// Select all Pods from Namespaces matched by this selector, as
+	// workloads in To/From fields. If set with PodSelector,
+	// Pods are matched from Namespaces matched by the NamespaceSelector.
+	// +optional
+	NamespaceSelector *metav1.LabelSelector `json:"namespaceSelector,omitempty"`
+}
+
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
