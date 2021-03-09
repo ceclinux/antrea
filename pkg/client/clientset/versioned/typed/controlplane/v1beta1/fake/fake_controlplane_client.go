@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,10 @@ func (c *FakeControlplaneV1beta1) AddressGroups() v1beta1.AddressGroupInterface 
 
 func (c *FakeControlplaneV1beta1) AppliedToGroups() v1beta1.AppliedToGroupInterface {
 	return &FakeAppliedToGroups{c}
+}
+
+func (c *FakeControlplaneV1beta1) EgressPolicies(namespace string) v1beta1.EgressPolicyInterface {
+	return &FakeEgressPolicies{c, namespace}
 }
 
 func (c *FakeControlplaneV1beta1) NetworkPolicies(namespace string) v1beta1.NetworkPolicyInterface {
