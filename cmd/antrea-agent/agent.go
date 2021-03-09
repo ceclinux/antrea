@@ -168,7 +168,7 @@ func run(o *Options) error {
 	statusManagerEnabled := antreaPolicyEnabled
 	loggingEnabled := antreaPolicyEnabled
 
-	egressController, err := egress.NewEgressController(k8sClient)
+	egressController := egress.NewEgressController(k8sClient, nodeConfig.Name)
 
 	networkPolicyController, err := networkpolicy.NewNetworkPolicyController(
 		antreaClientProvider,
@@ -281,6 +281,7 @@ func run(o *Options) error {
 	go nodeRouteController.Run(stopCh)
 
 	go networkPolicyController.Run(stopCh)
+	go egressController.Run(stopCh)
 
 	if features.DefaultFeatureGate.Enabled(features.NetworkPolicyStats) {
 		go statsCollector.Run(stopCh)
