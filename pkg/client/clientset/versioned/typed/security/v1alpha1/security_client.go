@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import (
 type SecurityV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClusterNetworkPoliciesGetter
+	EgressPoliciesGetter
 	NetworkPoliciesGetter
 	TiersGetter
 }
@@ -36,6 +37,10 @@ type SecurityV1alpha1Client struct {
 
 func (c *SecurityV1alpha1Client) ClusterNetworkPolicies() ClusterNetworkPolicyInterface {
 	return newClusterNetworkPolicies(c)
+}
+
+func (c *SecurityV1alpha1Client) EgressPolicies(namespace string) EgressPolicyInterface {
+	return newEgressPolicies(c, namespace)
 }
 
 func (c *SecurityV1alpha1Client) NetworkPolicies(namespace string) NetworkPolicyInterface {

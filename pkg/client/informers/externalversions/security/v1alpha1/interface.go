@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import (
 type Interface interface {
 	// ClusterNetworkPolicies returns a ClusterNetworkPolicyInformer.
 	ClusterNetworkPolicies() ClusterNetworkPolicyInformer
+	// EgressPolicies returns a EgressPolicyInformer.
+	EgressPolicies() EgressPolicyInformer
 	// NetworkPolicies returns a NetworkPolicyInformer.
 	NetworkPolicies() NetworkPolicyInformer
 	// Tiers returns a TierInformer.
@@ -44,6 +46,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // ClusterNetworkPolicies returns a ClusterNetworkPolicyInformer.
 func (v *version) ClusterNetworkPolicies() ClusterNetworkPolicyInformer {
 	return &clusterNetworkPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// EgressPolicies returns a EgressPolicyInformer.
+func (v *version) EgressPolicies() EgressPolicyInformer {
+	return &egressPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // NetworkPolicies returns a NetworkPolicyInformer.

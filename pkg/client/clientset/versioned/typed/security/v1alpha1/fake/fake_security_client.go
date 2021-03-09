@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,10 @@ type FakeSecurityV1alpha1 struct {
 
 func (c *FakeSecurityV1alpha1) ClusterNetworkPolicies() v1alpha1.ClusterNetworkPolicyInterface {
 	return &FakeClusterNetworkPolicies{c}
+}
+
+func (c *FakeSecurityV1alpha1) EgressPolicies(namespace string) v1alpha1.EgressPolicyInterface {
+	return &FakeEgressPolicies{c, namespace}
 }
 
 func (c *FakeSecurityV1alpha1) NetworkPolicies(namespace string) v1alpha1.NetworkPolicyInterface {

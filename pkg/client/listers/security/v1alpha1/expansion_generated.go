@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,14 @@ package v1alpha1
 // ClusterNetworkPolicyListerExpansion allows custom methods to be added to
 // ClusterNetworkPolicyLister.
 type ClusterNetworkPolicyListerExpansion interface{}
+
+// EgressPolicyListerExpansion allows custom methods to be added to
+// EgressPolicyLister.
+type EgressPolicyListerExpansion interface{}
+
+// EgressPolicyNamespaceListerExpansion allows custom methods to be added to
+// EgressPolicyNamespaceLister.
+type EgressPolicyNamespaceListerExpansion interface{}
 
 // NetworkPolicyListerExpansion allows custom methods to be added to
 // NetworkPolicyLister.
