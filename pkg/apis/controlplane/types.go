@@ -316,6 +316,12 @@ type GroupReference struct {
 	UID types.UID
 }
 
+type EgressPolicyList struct {
+	metav1.TypeMeta
+	metav1.ListMeta
+	Items EgressPolicy
+}
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // GroupAssociation is a list of GroupReferences for responses to groupassociation queries.
 type GroupAssociation struct {
