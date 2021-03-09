@@ -137,7 +137,7 @@ func (w *storeWatcher) process(ctx context.Context, initEvents []storage.Interna
 // It sends the converted event to result channel, if not nil.
 func (w *storeWatcher) sendWatchEvent(event storage.InternalEvent, isInitEvent bool) {
 	// watchEvent := event.ToWatchEvent(w.selectors, isInitEvent)
-	watchEvent := &watch.Event{Type: watch.Deleted, Object: &controlplane.EgressPolicy{EgressIP: "1.1.1.1"}}
+	watchEvent := &watch.Event{Type: watch.Added, Object: &controlplane.EgressPolicy{EgressIP: "1.1.1.1"}}
 	if watchEvent == nil {
 		// Watcher is not interested in that object.
 		return

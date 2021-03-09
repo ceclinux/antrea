@@ -45,7 +45,7 @@ func NewEgressController(
 			if !ok {
 				return fmt.Errorf("cannot convert to *v1beta1.NetworkPolicy: %v", obj)
 			}
-			klog.Infof("EgressPolicy %s applied to Pods on this Node", policy.EgressGroup)
+			klog.Infof("EgressPolicy %+v applied to Pods on this Node", policy)
 			return nil
 		},
 	}
