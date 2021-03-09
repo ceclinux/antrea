@@ -23,6 +23,7 @@ import (
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/klog"
 
+	"github.com/vmware-tanzu/antrea/pkg/apis/controlplane"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/storage"
 )
 
@@ -135,7 +136,8 @@ func (w *storeWatcher) process(ctx context.Context, initEvents []storage.Interna
 // sendWatchEvent converts an InternalEvent to watch.Event based on the watcher's selectors.
 // It sends the converted event to result channel, if not nil.
 func (w *storeWatcher) sendWatchEvent(event storage.InternalEvent, isInitEvent bool) {
-	watchEvent := event.ToWatchEvent(w.selectors, isInitEvent)
+	// watchEvent := event.ToWatchEvent(w.selectors, isInitEvent)
+	watchEvent := &watch.Event{Type: watch.Deleted, Object: &controlplane.EgressPolicy{EgressIP: "1.1.1.1"}}
 	if watchEvent == nil {
 		// Watcher is not interested in that object.
 		return
