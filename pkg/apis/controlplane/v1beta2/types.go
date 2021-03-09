@@ -337,6 +337,9 @@ type GroupAssociation struct {
 	AssociatedGroups []GroupReference `json:"associatedGroups" protobuf:"bytes,2,rep,name=associatedGroups"`
 }
 
+// +genclient
+// +genclient:onlyVerbs=list,get,watch
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicy struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard metadata of the object.
