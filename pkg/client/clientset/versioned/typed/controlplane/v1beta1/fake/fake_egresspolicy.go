@@ -21,6 +21,7 @@ import (
 
 	v1beta1 "github.com/vmware-tanzu/antrea/pkg/apis/controlplane/v1beta1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -45,6 +46,28 @@ func (c *FakeEgressPolicies) Get(ctx context.Context, name string, options v1.Ge
 		return nil, err
 	}
 	return obj.(*v1beta1.EgressPolicy), err
+}
+
+// List takes label and field selectors, and returns the list of EgressPolicies that match those selectors.
+func (c *FakeEgressPolicies) List(ctx context.Context, opts v1.ListOptions) (result *v1beta1.EgressPolicyList, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewListAction(egresspoliciesResource, egresspoliciesKind, c.ns, opts), &v1beta1.EgressPolicyList{})
+
+	if obj == nil {
+		return nil, err
+	}
+
+	label, _, _ := testing.ExtractFromListOptions(opts)
+	if label == nil {
+		label = labels.Everything()
+	}
+	list := &v1beta1.EgressPolicyList{ListMeta: obj.(*v1beta1.EgressPolicyList).ListMeta}
+	for _, item := range obj.(*v1beta1.EgressPolicyList).Items {
+		if label.Matches(labels.Set(item.Labels)) {
+			list.Items = append(list.Items, item)
+		}
+	}
+	return list, err
 }
 
 // Watch returns a watch.Interface that watches the requested egressPolicies.

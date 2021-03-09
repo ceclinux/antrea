@@ -36,6 +36,7 @@ type EgressPoliciesGetter interface {
 // EgressPolicyInterface has methods to work with EgressPolicy resources.
 type EgressPolicyInterface interface {
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1beta1.EgressPolicy, error)
+	List(ctx context.Context, opts v1.ListOptions) (*v1beta1.EgressPolicyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
 	EgressPolicyExpansion
 }
@@ -62,6 +63,23 @@ func (c *egressPolicies) Get(ctx context.Context, name string, options v1.GetOpt
 		Resource("egresspolicies").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// List takes label and field selectors, and returns the list of EgressPolicies that match those selectors.
+func (c *egressPolicies) List(ctx context.Context, opts v1.ListOptions) (result *v1beta1.EgressPolicyList, err error) {
+	var timeout time.Duration
+	if opts.TimeoutSeconds != nil {
+		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
+	}
+	result = &v1beta1.EgressPolicyList{}
+	err = c.client.Get().
+		Namespace(c.ns).
+		Resource("egresspolicies").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Timeout(timeout).
 		Do(ctx).
 		Into(result)
 	return

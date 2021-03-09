@@ -103,7 +103,7 @@ message EgressGroup {
 }
 
 // +genclient
-// +genclient:onlyVerbs=get,watch
+// +genclient:onlyVerbs=list,get,watch
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 message EgressPolicy {
   // Standard metadata of the object.
@@ -113,6 +113,13 @@ message EgressPolicy {
   optional string egressGroup = 2;
 
   optional string egressIP = 3;
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+message EgressPolicyList {
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
+
+  repeated EgressPolicy items = 2;
 }
 
 // ExternalEntityReference represents a ExternalEntity Reference.
