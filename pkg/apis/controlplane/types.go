@@ -316,6 +316,7 @@ type GroupReference struct {
 	UID types.UID
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicyList struct {
 	metav1.TypeMeta
 	metav1.ListMeta

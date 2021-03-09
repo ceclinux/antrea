@@ -327,6 +327,7 @@ type GroupReference struct {
 	UID types.UID `json:"uid,omitempty" protobuf:"bytes,3,opt,name=uid,casttype=k8s.io/apimachinery/pkg/types.UID"`
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicyList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
