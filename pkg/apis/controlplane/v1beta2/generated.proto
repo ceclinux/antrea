@@ -94,6 +94,24 @@ message ClusterGroupMembers {
   repeated GroupMember effectiveMembers = 2;
 }
 
+message EgressGroup {
+  // Standard metadata of the object.
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // GroupMembers is a list of resources selected by this group.
+  repeated GroupMember groupMembers = 2;
+}
+
+message EgressPolicy {
+  // Standard metadata of the object.
+  optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // EgressGroup is the name of the EgressGroup to which this policy applies.
+  optional string egressGroup = 2;
+
+  optional string egressIP = 3;
+}
+
 // ExternalEntityReference represents a ExternalEntity Reference.
 message ExternalEntityReference {
   // The name of this ExternalEntity.

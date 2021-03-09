@@ -301,6 +301,9 @@ type NetworkPolicyStats struct {
 	TrafficStats statsv1alpha1.TrafficStats `json:"trafficStats,omitempty" protobuf:"bytes,2,opt,name=trafficStats"`
 }
 
+// +genclient
+// +genclient:onlyVerbs=list,get,watch
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicy struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard metadata of the object.
