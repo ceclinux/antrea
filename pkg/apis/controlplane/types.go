@@ -319,7 +319,7 @@ type GroupReference struct {
 type EgressPolicyList struct {
 	metav1.TypeMeta
 	metav1.ListMeta
-	Items EgressPolicy
+	Items []EgressPolicy
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
