@@ -330,19 +330,19 @@ func ConfigureLinkAddresses(idx int, ipNets []*net.IPNet) error {
 	addrsToRemove := addrSliceDifference(addrs, ipNets)
 
 	if len(addrsToAdd) == 0 && len(addrsToRemove) == 0 {
-		klog.V(2).Infof("IP configuration for interface %s does not need to change", ifaceName)
+		klog.Infof("IP configuration for interface %s does not need to change", ifaceName)
 		return nil
 	}
 
 	for _, addr := range addrsToRemove {
-		klog.V(2).Infof("Removing address %v from interface %s", addr, ifaceName)
+		klog.Infof("Removing address %v from interface %s", addr, ifaceName)
 		if err := RemoveInterfaceAddress(ifaceName, addr.IP); err != nil {
 			return fmt.Errorf("failed to remove address %v from interface %s: %v", addr, ifaceName, err)
 		}
 	}
 
 	for _, addr := range addrsToAdd {
-		klog.V(2).Infof("Adding address %v to interface %s", addr, ifaceName)
+		klog.Infof("Adding address %v to interface %s", addr, ifaceName)
 		if addr.IP.To4() == nil {
 			klog.Warningf("Windows only supports IPv4 addresses, skipping this address %v", addr)
 			return nil

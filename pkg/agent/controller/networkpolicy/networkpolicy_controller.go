@@ -460,12 +460,12 @@ func (c *Controller) processAllItemsInQueue() {
 func (c *Controller) syncRule(key string) error {
 	startTime := time.Now()
 	defer func() {
-		klog.V(4).Infof("Finished syncing rule %q. (%v)", key, time.Since(startTime))
+		klog.Infof("Finished syncing rule %q. (%v)", key, time.Since(startTime))
 	}()
 
 	rule, exists, completed := c.ruleCache.GetCompletedRule(key)
 	if !exists {
-		klog.V(2).Infof("Rule %v had been deleted, removing its flows", key)
+		klog.Infof("Rule %v had been deleted, removing its flows", key)
 		if err := c.reconciler.Forget(key); err != nil {
 			return err
 		}
@@ -479,7 +479,7 @@ func (c *Controller) syncRule(key string) error {
 	// If the rule is not complete, we can simply skip it as it will be marked as dirty
 	// and queued again when we receive the missing group it missed.
 	if !completed {
-		klog.V(2).Infof("Rule %v was not complete, skipping", key)
+		klog.Infof("Rule %v was not complete, skipping", key)
 		return nil
 	}
 	if err := c.reconciler.Reconcile(rule); err != nil {
@@ -497,7 +497,7 @@ func (c *Controller) syncRule(key string) error {
 func (c *Controller) syncRules(keys []string) error {
 	startTime := time.Now()
 	defer func() {
-		klog.V(4).Infof("Finished syncing all rules before bookmark event (%v)", time.Since(startTime))
+		klog.Infof("Finished syncing all rules before bookmark event (%v)", time.Since(startTime))
 	}()
 
 	var allRules []*CompletedRule
@@ -600,7 +600,7 @@ loop:
 			}
 			switch event.Type {
 			case watch.Added:
-				klog.V(2).Infof("Added %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Added %s (%#v)", w.objectType, event.Object)
 				initObjects = append(initObjects, event.Object)
 			case watch.Bookmark:
 				break loop
@@ -632,19 +632,19 @@ loop:
 					klog.Errorf("Failed to handle added event: %v", err)
 					return
 				}
-				klog.V(2).Infof("Added %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Added %s (%#v)", w.objectType, event.Object)
 			case watch.Modified:
 				if err := w.UpdateFunc(event.Object); err != nil {
 					klog.Errorf("Failed to handle modified event: %v", err)
 					return
 				}
-				klog.V(2).Infof("Updated %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Updated %s (%#v)", w.objectType, event.Object)
 			case watch.Deleted:
 				if err := w.DeleteFunc(event.Object); err != nil {
 					klog.Errorf("Failed to handle deleted event: %v", err)
 					return
 				}
-				klog.V(2).Infof("Removed %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Removed %s (%#v)", w.objectType, event.Object)
 			default:
 				klog.Errorf("Unknown event: %v", event)
 				return

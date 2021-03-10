@@ -288,7 +288,7 @@ func (r *reconciler) getOFRuleTable(rule *CompletedRule) binding.TableIDType {
 // and re-arranges installed priorities on OVS if necessary.
 func (r *reconciler) getOFPriority(rule *CompletedRule, table binding.TableIDType, pa *tablePriorityAssigner) (*uint16, bool, error) {
 	if !rule.isAntreaNetworkPolicyRule() {
-		klog.V(2).Infof("Assigning default priority for k8s NetworkPolicy.")
+		klog.Infof("Assigning default priority for k8s NetworkPolicy.")
 		return nil, true, nil
 	}
 	p := types.Priority{
@@ -320,7 +320,7 @@ func (r *reconciler) getOFPriority(rule *CompletedRule, table binding.TableIDTyp
 		}
 		ofPriority, _ = pa.assigner.GetOFPriority(p)
 	}
-	klog.V(2).Infof("Assigning OFPriority %v for rule %v", ofPriority, rule.ID)
+	klog.Infof("Assigning OFPriority %v for rule %v", ofPriority, rule.ID)
 	return &ofPriority, registered, nil
 }
 
@@ -344,7 +344,7 @@ func (r *reconciler) BatchReconcile(rules []*CompletedRule) error {
 	for _, rule := range rulesToInstall {
 		ruleTable := r.getOFRuleTable(rule)
 		priorityAssigner := r.priorityAssigners[ruleTable]
-		klog.V(2).Infof("Adding rule %s of NetworkPolicy %s to be reconciled in batch", rule.ID, rule.SourceRef.ToString())
+		klog.Infof("Adding rule %s of NetworkPolicy %s to be reconciled in batch", rule.ID, rule.SourceRef.ToString())
 		ofPriority, _, _ := r.getOFPriority(rule, ruleTable, priorityAssigner)
 		priorities = append(priorities, ofPriority)
 		if ofPriority != nil {
@@ -390,7 +390,7 @@ func (r *reconciler) registerOFPriorities(rules []*CompletedRule) error {
 
 // add converts CompletedRule to PolicyRule(s) and invokes installOFRule to install them.
 func (r *reconciler) add(rule *CompletedRule, ofPriority *uint16, table binding.TableIDType) error {
-	klog.V(2).Infof("Adding new rule %v", rule)
+	klog.Infof("Adding new rule %v", rule)
 	ofRuleByServicesMap, lastRealized := r.computeOFRulesForAdd(rule, ofPriority, table)
 	for svcKey, ofRule := range ofRuleByServicesMap {
 		// Each pod group gets an Openflow ID.
@@ -530,7 +530,7 @@ func (r *reconciler) batchAdd(rules []*CompletedRule, ofPriorities []*uint16) er
 // update calculates the difference of Addresses between oldRule and newRule,
 // and invokes Openflow client's methods to reconcile them.
 func (r *reconciler) update(lastRealized *lastRealized, newRule *CompletedRule, ofPriority *uint16, table binding.TableIDType) error {
-	klog.V(2).Infof("Updating existing rule %v", newRule)
+	klog.Infof("Updating existing rule %v", newRule)
 	// staleOFIDs tracks servicesKey that are no long needed.
 	// Firstly fill it with the last realized ofIDs.
 	staleOFIDs := make(map[servicesKey]uint32, len(lastRealized.ofIDs))
@@ -652,7 +652,7 @@ func (r *reconciler) update(lastRealized *lastRealized, newRule *CompletedRule, 
 }
 
 func (r *reconciler) installOFRule(ofRule *types.PolicyRule) error {
-	klog.V(2).Infof("Installing ofRule %d (Direction: %v, From: %d, To: %d, Service: %d)",
+	klog.Infof("Installing ofRule %d (Direction: %v, From: %d, To: %d, Service: %d)",
 		ofRule.FlowID, ofRule.Direction, len(ofRule.From), len(ofRule.To), len(ofRule.Service))
 	if err := r.ofClient.InstallPolicyRuleFlows(ofRule); err != nil {
 		r.idAllocator.forgetRule(ofRule.FlowID)
@@ -662,7 +662,7 @@ func (r *reconciler) installOFRule(ofRule *types.PolicyRule) error {
 }
 
 func (r *reconciler) updateOFRule(ofID uint32, addedFrom []types.Address, addedTo []types.Address, deletedFrom []types.Address, deletedTo []types.Address, priority *uint16) error {
-	klog.V(2).Infof("Updating ofRule %d (addedFrom: %d, addedTo: %d, deleteFrom: %d, deletedTo: %d)",
+	klog.Infof("Updating ofRule %d (addedFrom: %d, addedTo: %d, deleteFrom: %d, deletedTo: %d)",
 		ofID, len(addedFrom), len(addedTo), len(deletedFrom), len(deletedTo))
 	// TODO: This might be unnecessarily complex and hard for error handling, consider revising the Openflow interfaces.
 	if len(addedFrom) > 0 {
@@ -689,14 +689,14 @@ func (r *reconciler) updateOFRule(ofID uint32, addedFrom []types.Address, addedT
 }
 
 func (r *reconciler) uninstallOFRule(ofID uint32, table binding.TableIDType) error {
-	klog.V(2).Infof("Uninstalling ofRule %d", ofID)
+	klog.Infof("Uninstalling ofRule %d", ofID)
 	stalePriorities, err := r.ofClient.UninstallPolicyRuleFlows(ofID)
 	if err != nil {
 		return fmt.Errorf("error uninstalling ofRule %v: %v", ofID, err)
 	}
 	if len(stalePriorities) > 0 {
 		for _, p := range stalePriorities {
-			klog.V(2).Infof("Releasing stale priority %v", p)
+			klog.Infof("Releasing stale priority %v", p)
 			priorityNum, err := strconv.ParseUint(p, 10, 16)
 			if err != nil {
 				// Cannot parse the priority str. Theoretically this should never happen.
@@ -761,7 +761,7 @@ func (r *reconciler) getOFPorts(members v1beta2.GroupMemberSet) sets.Int32 {
 			continue
 		}
 		for _, iface := range ifaces {
-			klog.V(2).Infof("Got OFPort %v for %s/%s", iface.OFPort, ns, entityName)
+			klog.Infof("Got OFPort %v for %s/%s", iface.OFPort, ns, entityName)
 			ofPorts.Insert(iface.OFPort)
 		}
 	}
@@ -786,7 +786,7 @@ func (r *reconciler) getIPs(members v1beta2.GroupMemberSet) sets.String {
 		for _, iface := range ifaces {
 			for _, ipAddr := range iface.IPs {
 				if ipAddr != nil {
-					klog.V(2).Infof("Got IP %v for %s/%s", iface.IPs, ns, entityName)
+					klog.Infof("Got IP %v for %s/%s", iface.IPs, ns, entityName)
 					ips.Insert(ipAddr.String())
 				}
 			}

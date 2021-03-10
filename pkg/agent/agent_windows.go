@@ -158,7 +158,7 @@ func (i *Initializer) prepareOVSBridge() error {
 			return err
 		}
 		err = nil
-		klog.V(4).Infof("Address: %s already exists when configuring IP on interface %s", uplinkNetConfig.IP.String(), brName)
+		klog.Infof("Address: %s already exists when configuring IP on interface %s", uplinkNetConfig.IP.String(), brName)
 	}
 	// Restore the host routes which are lost when moving the network configuration of the uplink interface to OVS bridge interface.
 	if err = i.restoreHostRoutes(); err != nil {
@@ -233,7 +233,7 @@ func (i *Initializer) saveHostRoutes() error {
 		if route.DestinationSubnet.IP.IsUnspecified() {
 			continue
 		}
-		klog.V(4).Infof("Got host route: %v", route)
+		klog.Infof("Got host route: %v", route)
 		i.nodeConfig.UplinkNetConfig.Routes = append(i.nodeConfig.UplinkNetConfig.Routes, route)
 	}
 	return nil

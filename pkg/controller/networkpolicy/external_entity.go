@@ -35,7 +35,7 @@ import (
 func (n *NetworkPolicyController) addExternalEntity(obj interface{}) {
 	defer n.heartbeat("addExternalEntity")
 	ee := obj.(metav1.Object)
-	klog.V(2).Infof("Processing ExternalEntity %s/%s ADD event, labels: %v", ee.GetNamespace(), ee.GetName(), ee.GetLabels())
+	klog.Infof("Processing ExternalEntity %s/%s ADD event, labels: %v", ee.GetNamespace(), ee.GetName(), ee.GetLabels())
 	// Find all AppliedToGroup keys which match the ExternalEntity's labels.
 	appliedToGroupKeySet := n.filterAppliedToGroupsForPodOrExternalEntity(ee)
 	// Find all AddressGroup keys which match the ExternalEntity's labels.
@@ -61,7 +61,7 @@ func (n *NetworkPolicyController) updateExternalEntity(oldObj, curObj interface{
 	defer n.heartbeat("updateExternalEntity")
 	oldEE := oldObj.(metav1.Object)
 	curEE := curObj.(metav1.Object)
-	klog.V(2).Infof("Processing ExternalEntity %s/%s UPDATE event, labels: %v", curEE.GetNamespace(), curEE.GetName(), curEE.GetLabels())
+	klog.Infof("Processing ExternalEntity %s/%s UPDATE event, labels: %v", curEE.GetNamespace(), curEE.GetName(), curEE.GetLabels())
 	// No need to trigger processing of groups if there is no change in the
 	// ExternalEntity labels or ExternalEntity's Endpoints.
 	labelsEqual := labels.Equals(labels.Set(oldEE.GetLabels()), labels.Set(curEE.GetLabels()))
@@ -74,7 +74,7 @@ func (n *NetworkPolicyController) updateExternalEntity(oldObj, curObj interface{
 	//  all NamedPorts in each Endpoint are of the exact order. Considering implementing custom compare
 	//  method for the ExternalEntity spec to solve this and improve performance.
 	if labelsEqual && specEqual {
-		klog.V(4).Infof("No change in ExternalEntity %s/%s. Skipping NetworkPolicy evaluation.", curEE.GetNamespace(), curEE.GetName())
+		klog.Infof("No change in ExternalEntity %s/%s. Skipping NetworkPolicy evaluation.", curEE.GetNamespace(), curEE.GetName())
 		return
 	}
 	// Find groups matching the old ExternalEntity's labels.
@@ -138,7 +138,7 @@ func (n *NetworkPolicyController) deleteExternalEntity(old interface{}) {
 	}
 	defer n.heartbeat("deleteExternalEntity")
 
-	klog.V(2).Infof("Processing ExternalEntity %s/%s DELETE event, labels: %v", ee.GetNamespace(), ee.GetName(), ee.GetLabels())
+	klog.Infof("Processing ExternalEntity %s/%s DELETE event, labels: %v", ee.GetNamespace(), ee.GetName(), ee.GetLabels())
 	// Find all AppliedToGroup keys which match the ExternalEntity's labels.
 	appliedToGroupKeys := n.filterAppliedToGroupsForPodOrExternalEntity(ee)
 	// Find all AddressGroup keys which match the ExternalEntity's labels.

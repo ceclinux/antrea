@@ -529,7 +529,7 @@ func (c *clause) addConjunctiveMatchFlow(client *client, match *conjunctiveMatch
 	matcherKey := match.generateGlobalMapKey()
 	_, found := c.matches[matcherKey]
 	if found {
-		klog.V(2).Infof("Conjunctive match flow with matcher %s is already added in rule: %d", matcherKey, c.action.conjID)
+		klog.Infof("Conjunctive match flow with matcher %s is already added in rule: %d", matcherKey, c.action.conjID)
 		return nil
 	}
 
@@ -848,7 +848,7 @@ func (c *client) calculateActionFlowChangesForRule(rule *types.PolicyRule) *poli
 	// Check if the policyRuleConjunction is added into cache or not. If yes, return nil.
 	conj := c.getPolicyRuleConjunction(ruleOfID)
 	if conj != nil {
-		klog.V(2).Infof("PolicyRuleConjunction %d is already added in cache", ruleOfID)
+		klog.Infof("PolicyRuleConjunction %d is already added in cache", ruleOfID)
 		return nil
 	}
 	conj = &policyRuleConjunction{
@@ -1129,7 +1129,7 @@ func (c *client) UninstallPolicyRuleFlows(ruleID uint32) ([]string, error) {
 
 	conj := c.getPolicyRuleConjunction(ruleID)
 	if conj == nil {
-		klog.V(2).Infof("policyRuleConjunction with ID %d not found", ruleID)
+		klog.Infof("policyRuleConjunction with ID %d not found", ruleID)
 		return nil, nil
 	}
 	staleOFPriorities := c.getStalePriorities(conj)
@@ -1161,7 +1161,7 @@ func (c *client) getStalePriorities(conj *policyRuleConjunction) (staleOFPriorit
 	if conj.ruleTableID != IngressRuleTable && conj.ruleTableID != EgressRuleTable {
 		ofPrioritiesPotentiallyStale = conj.ActionFlowPriorities()
 	}
-	klog.V(4).Infof("Potential stale ofpriority %v found", ofPrioritiesPotentiallyStale)
+	klog.Infof("Potential stale ofpriority %v found", ofPrioritiesPotentiallyStale)
 	for _, p := range ofPrioritiesPotentiallyStale {
 		// Filter out all the policyRuleConjuctions created at the ofPriority across all CNP tables.
 		conjs, _ := c.policyCache.ByIndex(priorityIndex, p)
@@ -1176,7 +1176,7 @@ func (c *client) getStalePriorities(conj *policyRuleConjunction) (staleOFPriorit
 			}
 		}
 		if priorityStale {
-			klog.V(2).Infof("ofPriority %v is now stale", p)
+			klog.Infof("ofPriority %v is now stale", p)
 			staleOFPriorities = append(staleOFPriorities, p)
 		}
 	}
@@ -1393,7 +1393,7 @@ func (c *client) calculateFlowUpdates(updates map[uint16]uint16, table binding.T
 			conj := conjObj.(*policyRuleConjunction)
 			// Only re-assign flow priorities for flows in the table specified.
 			if conj.ruleTableID != table {
-				klog.V(4).Infof("Conjunction %v with the same actionFlow priority is from a different table %v", conj.id, conj.ruleTableID)
+				klog.Infof("Conjunction %v with the same actionFlow priority is from a different table %v", conj.id, conj.ruleTableID)
 				continue
 			}
 			for _, actionFlow := range conj.actionFlows {

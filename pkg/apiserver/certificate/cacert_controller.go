@@ -161,7 +161,7 @@ func (c *CACertController) syncMutatingWebhooks(caCert []byte) error {
 		mWebhook, err := c.client.AdmissionregistrationV1().MutatingWebhookConfigurations().Get(context.TODO(), name, metav1.GetOptions{})
 		if err != nil {
 			if errors.IsNotFound(err) {
-				klog.V(2).Infof("Optional mutation webhook %s not found, skipping its update", name)
+				klog.Infof("Optional mutation webhook %s not found, skipping its update", name)
 				continue
 			}
 			return fmt.Errorf("error getting MutatingWebhookConfiguration %s: %v", name, err)

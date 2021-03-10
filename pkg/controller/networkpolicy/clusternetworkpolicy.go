@@ -33,7 +33,7 @@ func (n *NetworkPolicyController) addCNP(obj interface{}) {
 	// Create an internal NetworkPolicy object corresponding to this
 	// ClusterNetworkPolicy and enqueue task to internal NetworkPolicy Workqueue.
 	internalNP := n.processClusterNetworkPolicy(cnp)
-	klog.V(2).Infof("Creating new internal NetworkPolicy %s for %s", internalNP.Name, internalNP.SourceRef.ToString())
+	klog.Infof("Creating new internal NetworkPolicy %s for %s", internalNP.Name, internalNP.SourceRef.ToString())
 	n.internalNetworkPolicyStore.Create(internalNP)
 	key := internalNetworkPolicyKeyFunc(cnp)
 	n.enqueueInternalNetworkPolicy(key)
@@ -48,7 +48,7 @@ func (n *NetworkPolicyController) updateCNP(old, cur interface{}) {
 	// Update an internal NetworkPolicy, corresponding to this NetworkPolicy and
 	// enqueue task to internal NetworkPolicy Workqueue.
 	curInternalNP := n.processClusterNetworkPolicy(curCNP)
-	klog.V(2).Infof("Updating existing internal NetworkPolicy %s for %s", curInternalNP.Name, curInternalNP.SourceRef.ToString())
+	klog.Infof("Updating existing internal NetworkPolicy %s for %s", curInternalNP.Name, curInternalNP.SourceRef.ToString())
 	// Retrieve old secv1alpha1.NetworkPolicy object.
 	oldCNP := old.(*secv1alpha1.ClusterNetworkPolicy)
 	// Old and current NetworkPolicy share the same key.
@@ -105,7 +105,7 @@ func (n *NetworkPolicyController) deleteCNP(old interface{}) {
 	key := internalNetworkPolicyKeyFunc(cnp)
 	oldInternalNPObj, _, _ := n.internalNetworkPolicyStore.Get(key)
 	oldInternalNP := oldInternalNPObj.(*antreatypes.NetworkPolicy)
-	klog.V(2).Infof("Deleting internal NetworkPolicy %s for %s", oldInternalNP.Name, oldInternalNP.SourceRef.ToString())
+	klog.Infof("Deleting internal NetworkPolicy %s for %s", oldInternalNP.Name, oldInternalNP.SourceRef.ToString())
 	err := n.internalNetworkPolicyStore.Delete(key)
 	if err != nil {
 		klog.Errorf("Error deleting internal NetworkPolicy during NetworkPolicy %s delete: %v", cnp.Name, err)
@@ -266,7 +266,7 @@ func (n *NetworkPolicyController) processAppliedToGroupForCG(g string) string {
 	}
 	intGrp := ig.(*antreatypes.Group)
 	if intGrp.IPBlock != nil {
-		klog.V(2).Infof("ClusterGroup %s with IPBlock will not be processed as AppliedTo", g)
+		klog.Infof("ClusterGroup %s with IPBlock will not be processed as AppliedTo", g)
 		return ""
 	}
 	return n.createAppliedToGroupForClusterGroupCRD(intGrp)

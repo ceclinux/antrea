@@ -75,7 +75,7 @@ func (ct *connTrackSystem) DumpFlows(zoneFilter uint16) ([]*flowexporter.Connect
 	}
 
 	filteredConns := filterAntreaConns(conns, ct.nodeConfig, svcCIDR, zoneFilter, ct.isAntreaProxyEnabled)
-	klog.V(2).Infof("No. of flow exporter considered flows in Antrea zoneID: %d", len(filteredConns))
+	klog.Infof("No. of flow exporter considered flows in Antrea zoneID: %d", len(filteredConns))
 
 	return filteredConns, len(conns), nil
 }
@@ -111,7 +111,7 @@ func (nfct *netFilterConnTrack) DumpFlowsInCtZone(zoneFilter uint16) ([]*flowexp
 		antreaConns[i] = netlinkFlowToAntreaConnection(&conn)
 	}
 
-	klog.V(2).Infof("Finished dumping -- total no. of flows in conntrack: %d", len(antreaConns))
+	klog.Infof("Finished dumping -- total no. of flows in conntrack: %d", len(antreaConns))
 
 	nfct.netlinkConn.Close()
 	return antreaConns, nil

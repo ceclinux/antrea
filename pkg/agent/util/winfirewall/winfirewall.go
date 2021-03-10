@@ -165,7 +165,7 @@ func (c *Client) addIPRule(name string, direction FWRuleDirection, ipNet *net.IP
 		klog.Errorf("Failed to add firewall rule %s", rule.getCommandString())
 		return err
 	}
-	klog.V(2).Infof("Added firewall rule %s", rule.getCommandString())
+	klog.Infof("Added firewall rule %s", rule.getCommandString())
 	return nil
 }
 

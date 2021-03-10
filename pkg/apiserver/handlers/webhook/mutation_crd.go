@@ -28,7 +28,7 @@ import (
 
 func HandleMutationNetworkPolicy(m *networkpolicy.NetworkPolicyMutator) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		klog.V(2).Info("Received request to mutate Antrea-native Policy CRD")
+		klog.Info("Received request to mutate Antrea-native Policy CRD")
 		var reqBody []byte
 		if r.Body != nil {
 			reqBody, _ = ioutil.ReadAll(r.Body)
@@ -69,7 +69,7 @@ func HandleMutationNetworkPolicy(m *networkpolicy.NetworkPolicyMutator) http.Han
 			klog.Errorf("Unable to encode response during mutation: %v", err)
 			http.Error(w, fmt.Sprintf("could not encode response: %v", err), http.StatusInternalServerError)
 		}
-		klog.V(2).Infof("Writing mutation response to MutationAdmissionHook")
+		klog.Infof("Writing mutation response to MutationAdmissionHook")
 		if _, err := w.Write(resp); err != nil {
 			klog.Errorf("Unable to write response during mutation: %v", err)
 			http.Error(w, fmt.Sprintf("could not write response: %v", err), http.StatusInternalServerError)

@@ -240,7 +240,7 @@ func (c *Controller) processTraceflowItem() bool {
 func (c *Controller) syncTraceflow(traceflowName string) error {
 	startTime := time.Now()
 	defer func() {
-		klog.V(4).Infof("Finished syncing Traceflow for %s. (%v)", traceflowName, time.Since(startTime))
+		klog.Infof("Finished syncing Traceflow for %s. (%v)", traceflowName, time.Since(startTime))
 	}()
 
 	tf, err := c.traceflowLister.Get(traceflowName)

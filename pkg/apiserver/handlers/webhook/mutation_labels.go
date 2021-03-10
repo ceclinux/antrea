@@ -47,7 +47,7 @@ type jsonPatch struct {
 
 func HandleMutationLabels() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		klog.V(2).Info("Received request to mutate resource labels")
+		klog.Info("Received request to mutate resource labels")
 		var reqBody []byte
 		if r.Body != nil {
 			reqBody, _ = ioutil.ReadAll(r.Body)
@@ -88,7 +88,7 @@ func HandleMutationLabels() http.HandlerFunc {
 			klog.Errorf("Unable to encode response during mutation: %v", err)
 			http.Error(w, fmt.Sprintf("could not encode response: %v", err), http.StatusInternalServerError)
 		}
-		klog.V(2).Infof("Writing mutation response to MutationAdmissionHook")
+		klog.Infof("Writing mutation response to MutationAdmissionHook")
 		if _, err := w.Write(resp); err != nil {
 			klog.Errorf("Unable to write response during mutation: %v", err)
 			http.Error(w, fmt.Sprintf("could not write response: %v", err), http.StatusInternalServerError)
@@ -108,7 +108,7 @@ func mutateResourceLabels(ar *admv1.AdmissionReview) *admv1.AdmissionResponse {
 
 	op := ar.Request.Operation
 	curRaw := ar.Request.Object.Raw
-	klog.V(2).Info("Mutating resource labels")
+	klog.Info("Mutating resource labels")
 	if curRaw != nil {
 		if err := json.Unmarshal(curRaw, &nsObj); err != nil {
 			klog.Errorf("Error de-serializing current resource")

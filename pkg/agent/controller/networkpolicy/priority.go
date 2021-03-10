@@ -271,7 +271,7 @@ func (pa *priorityAssigner) RegisterPriorities(priorities []types.Priority) (map
 		}
 	}
 	numPriorityToRegister := len(prioritiesToRegister)
-	klog.V(2).Infof("%v new priorities need to be registered", numPriorityToRegister)
+	klog.Infof("%v new priorities need to be registered", numPriorityToRegister)
 	if numPriorityToRegister == 0 {
 		return nil, nil, nil
 	} else if uint16(numPriorityToRegister+len(pa.sortedPriorities)) > pa.policyTopPriority-pa.policyBottomPriority+1 {
@@ -375,10 +375,10 @@ func (pa *priorityAssigner) insertConsecutivePriorities(priorities types.ByPrior
 func (pa *priorityAssigner) Release(ofPriority uint16) {
 	priority, exists := pa.ofPriorityMap[ofPriority]
 	if !exists {
-		klog.V(2).Infof("OF priority %v not known, skip releasing priority", ofPriority)
+		klog.Infof("OF priority %v not known, skip releasing priority", ofPriority)
 		return
 	}
-	klog.V(4).Infof("Releasing ofPriority %v", ofPriority)
+	klog.Infof("Releasing ofPriority %v", ofPriority)
 	pa.deletePriorityMapping(ofPriority, priority)
 	pa.unregisterPriority(priority)
 }

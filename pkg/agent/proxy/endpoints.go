@@ -119,7 +119,7 @@ func (t *endpointsChangesTracker) OnEndpointSliceUpdate(endpointSlice *discovery
 	}
 
 	if _, has := supportedEndpointSliceAddressTypes[endpointSlice.AddressType]; !has {
-		klog.V(4).Infof("EndpointSlice address type is not supported: %s", endpointSlice.AddressType)
+		klog.Infof("EndpointSlice address type is not supported: %s", endpointSlice.AddressType)
 		return false
 	}
 

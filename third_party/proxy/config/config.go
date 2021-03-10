@@ -148,7 +148,7 @@ func (c *EndpointsConfig) handleAddEndpoints(obj interface{}) {
 		return
 	}
 	for i := range c.eventHandlers {
-		klog.V(4).Infof("Calling handler.OnEndpointsAdd")
+		klog.Infof("Calling handler.OnEndpointsAdd")
 		c.eventHandlers[i].OnEndpointsAdd(endpoints)
 	}
 }
@@ -165,7 +165,7 @@ func (c *EndpointsConfig) handleUpdateEndpoints(oldObj, newObj interface{}) {
 		return
 	}
 	for i := range c.eventHandlers {
-		klog.V(4).Infof("Calling handler.OnEndpointsUpdate")
+		klog.Infof("Calling handler.OnEndpointsUpdate")
 		c.eventHandlers[i].OnEndpointsUpdate(oldEndpoints, endpoints)
 	}
 }
@@ -184,7 +184,7 @@ func (c *EndpointsConfig) handleDeleteEndpoints(obj interface{}) {
 		}
 	}
 	for i := range c.eventHandlers {
-		klog.V(4).Infof("Calling handler.OnEndpointsDelete")
+		klog.Infof("Calling handler.OnEndpointsDelete")
 		c.eventHandlers[i].OnEndpointsDelete(endpoints)
 	}
 }
@@ -239,7 +239,7 @@ func (c *ServiceConfig) handleAddService(obj interface{}) {
 		return
 	}
 	for i := range c.eventHandlers {
-		klog.V(4).Info("Calling handler.OnServiceAdd")
+		klog.Info("Calling handler.OnServiceAdd")
 		c.eventHandlers[i].OnServiceAdd(service)
 	}
 }
@@ -256,7 +256,7 @@ func (c *ServiceConfig) handleUpdateService(oldObj, newObj interface{}) {
 		return
 	}
 	for i := range c.eventHandlers {
-		klog.V(4).Info("Calling handler.OnServiceUpdate")
+		klog.Info("Calling handler.OnServiceUpdate")
 		c.eventHandlers[i].OnServiceUpdate(oldService, service)
 	}
 }
@@ -275,7 +275,7 @@ func (c *ServiceConfig) handleDeleteService(obj interface{}) {
 		}
 	}
 	for i := range c.eventHandlers {
-		klog.V(4).Info("Calling handler.OnServiceDelete")
+		klog.Info("Calling handler.OnServiceDelete")
 		c.eventHandlers[i].OnServiceDelete(service)
 	}
 }
@@ -330,7 +330,7 @@ func (c *EndpointSliceConfig) handleAddEndpointSlice(obj interface{}) {
 		return
 	}
 	for _, h := range c.eventHandlers {
-		klog.V(4).Infof("Calling handler.OnEndpointSliceAdd %+v", endpointSlice)
+		klog.Infof("Calling handler.OnEndpointSliceAdd %+v", endpointSlice)
 		h.OnEndpointSliceAdd(endpointSlice)
 	}
 }
@@ -347,7 +347,7 @@ func (c *EndpointSliceConfig) handleUpdateEndpointSlice(oldObj, newObj interface
 		return
 	}
 	for _, h := range c.eventHandlers {
-		klog.V(4).Infof("Calling handler.OnEndpointSliceUpdate")
+		klog.Infof("Calling handler.OnEndpointSliceUpdate")
 		h.OnEndpointSliceUpdate(oldEndpointSlice, newEndpointSlice)
 	}
 }
@@ -366,7 +366,7 @@ func (c *EndpointSliceConfig) handleDeleteEndpointSlice(obj interface{}) {
 		}
 	}
 	for _, h := range c.eventHandlers {
-		klog.V(4).Infof("Calling handler.OnEndpointsDelete")
+		klog.Infof("Calling handler.OnEndpointsDelete")
 		h.OnEndpointSliceDelete(endpointSlice)
 	}
 }

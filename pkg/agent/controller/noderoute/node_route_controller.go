@@ -353,7 +353,7 @@ func (c *Controller) processNextWorkItem() bool {
 func (c *Controller) syncNodeRoute(nodeName string) error {
 	startTime := time.Now()
 	defer func() {
-		klog.V(4).Infof("Finished syncing Node Route for %s. (%v)", nodeName, time.Since(startTime))
+		klog.Infof("Finished syncing Node Route for %s. (%v)", nodeName, time.Since(startTime))
 	}()
 
 	// The work queue guarantees that concurrent goroutines cannot call syncNodeRoute on the
@@ -567,7 +567,7 @@ func ParseTunnelInterfaceConfig(
 	portData *ovsconfig.OVSPortData,
 	portConfig *interfacestore.OVSPortConfig) *interfacestore.InterfaceConfig {
 	if portData.Options == nil {
-		klog.V(2).Infof("OVS port %s has no options", portData.Name)
+		klog.Infof("OVS port %s has no options", portData.Name)
 		return nil
 	}
 	remoteIP, localIP, psk, csum := ovsconfig.ParseTunnelInterfaceOptions(portData)

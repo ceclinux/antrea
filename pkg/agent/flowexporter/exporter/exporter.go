@@ -159,7 +159,7 @@ func (exp *flowExporter) Export(collectorAddr string, collectorProto string, sto
 				}
 
 				exp.pollCycle = 0
-				klog.V(2).Infof("Successfully exported IPFIX flow records")
+				klog.Infof("Successfully exported IPFIX flow records")
 			}
 		}
 	}
@@ -237,7 +237,7 @@ func (exp *flowExporter) initFlowExporter(collectorAddr string, collectorProto s
 		if err != nil {
 			return err
 		}
-		klog.V(2).Infof("Initialized flow exporter for IPv4 flow records and sent %d bytes size of template record", sentBytes)
+		klog.Infof("Initialized flow exporter for IPv4 flow records and sent %d bytes size of template record", sentBytes)
 	}
 	if exp.v6Enabled {
 		templateID := expProcess.NewTemplateID()
@@ -250,7 +250,7 @@ func (exp *flowExporter) initFlowExporter(collectorAddr string, collectorProto s
 		if err != nil {
 			return err
 		}
-		klog.V(2).Infof("Initialized flow exporter for IPv6 flow records and sent %d bytes size of template record", sentBytes)
+		klog.Infof("Initialized flow exporter for IPv6 flow records and sent %d bytes size of template record", sentBytes)
 	}
 
 	return nil
@@ -499,6 +499,6 @@ func (exp *flowExporter) sendDataSet(dataSet ipfix.IPFIXSet) (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("error when sending data set: %v", err)
 	}
-	klog.V(4).Infof("Data set sent successfully. Bytes sent: %d", sentBytes)
+	klog.Infof("Data set sent successfully. Bytes sent: %d", sentBytes)
 	return sentBytes, nil
 }

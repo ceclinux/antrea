@@ -117,14 +117,14 @@ func (monitor *controllerMonitor) createControllerCRD(crdName string) (*v1beta1.
 	controllerCRD := new(v1beta1.AntreaControllerInfo)
 	controllerCRD.Name = crdName
 	monitor.querier.GetControllerInfo(controllerCRD, false)
-	klog.V(2).Infof("Creating controller monitoring CRD %+v", controllerCRD)
+	klog.Infof("Creating controller monitoring CRD %+v", controllerCRD)
 	return monitor.client.ClusterinformationV1beta1().AntreaControllerInfos().Create(context.TODO(), controllerCRD, metav1.CreateOptions{})
 }
 
 // updateControllerCRD updates the monitoring CRD.
 func (monitor *controllerMonitor) updateControllerCRD(partial bool) (*v1beta1.AntreaControllerInfo, error) {
 	monitor.querier.GetControllerInfo(monitor.controllerCRD, partial)
-	klog.V(2).Infof("Updating controller monitoring CRD %+v, partial: %t", monitor.controllerCRD, partial)
+	klog.Infof("Updating controller monitoring CRD %+v, partial: %t", monitor.controllerCRD, partial)
 	return monitor.client.ClusterinformationV1beta1().AntreaControllerInfos().Update(context.TODO(), monitor.controllerCRD, metav1.UpdateOptions{})
 }
 

@@ -67,7 +67,7 @@ func (fr *FlowRecords) BuildFlowRecords() error {
 
 	// addOrUpdateFlowRecord method does not return any error, hence no error handling required.
 	fr.connStore.ForAllConnectionsDo(addOrUpdateFlowRecord)
-	klog.V(2).Infof("No. of flow records built: %d", len(fr.recordsMap))
+	klog.Infof("No. of flow records built: %d", len(fr.recordsMap))
 	return nil
 }
 
@@ -82,7 +82,7 @@ func (fr *FlowRecords) ValidateAndUpdateStats(connKey flowexporter.ConnectionKey
 	// Delete the flow record if the corresponding connection is not active, i.e., not present in conntrack table.
 	// Delete the corresponding connection in connectionMap as well.
 	if !record.Conn.IsActive {
-		klog.V(2).Infof("Deleting the inactive connection with key: %v", connKey)
+		klog.Infof("Deleting the inactive connection with key: %v", connKey)
 		delete(fr.recordsMap, connKey)
 		if err := fr.connStore.DeleteConnectionByKey(connKey); err != nil {
 			return err

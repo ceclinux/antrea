@@ -640,7 +640,7 @@ func (c *ruleCache) updateNetworkPolicyLocked(policy *v1beta.NetworkPolicy) erro
 		r := toRule(&policy.Rules[i], policy, maxPriority)
 		if _, exists := ruleByID[r.ID]; exists {
 			// If rule already exists, remove it from the map so the ones left finally are orphaned.
-			klog.V(2).Infof("Rule %v was not changed", r.ID)
+			klog.Infof("Rule %v was not changed", r.ID)
 			delete(ruleByID, r.ID)
 		} else {
 			// If rule doesn't exist, add it to cache, mark it as dirty.
@@ -759,7 +759,7 @@ func (c *ruleCache) unionAddressGroups(groupNames []string) (v1beta.GroupMemberS
 	for _, groupName := range groupNames {
 		curSet, exists := c.addressSetByGroup[groupName]
 		if !exists {
-			klog.V(2).Infof("AddressGroup %v was not found", groupName)
+			klog.Infof("AddressGroup %v was not found", groupName)
 			return nil, false
 		}
 		set = set.Union(curSet)
@@ -778,7 +778,7 @@ func (c *ruleCache) unionAppliedToGroups(groupNames []string) (v1beta.GroupMembe
 	for _, groupName := range groupNames {
 		curSet, exists := c.appliedToSetByGroup[groupName]
 		if !exists {
-			klog.V(2).Infof("AppliedToGroup %v was not found", groupName)
+			klog.Infof("AppliedToGroup %v was not found", groupName)
 			return nil, false
 		}
 		set = set.Union(curSet)

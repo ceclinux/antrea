@@ -71,7 +71,7 @@ func (ct *connTrackOvsCtl) DumpFlows(zoneFilter uint16) ([]*flowexporter.Connect
 	}
 
 	filteredConns := filterAntreaConns(conns, ct.nodeConfig, svcCIDR, zoneFilter, ct.isAntreaProxyEnabled)
-	klog.V(2).Infof("FlowExporter considered flows: %d", len(filteredConns))
+	klog.Infof("FlowExporter considered flows: %d", len(filteredConns))
 
 	return filteredConns, totalConns, nil
 }
@@ -89,7 +89,7 @@ func (ct *connTrackOvsCtl) ovsAppctlDumpConnections(zoneFilter uint16) ([]*flowe
 	for _, flow := range outputFlow {
 		conn, err := flowStringToAntreaConnection(flow, zoneFilter)
 		if err != nil {
-			klog.V(4).Infof("Ignoring the flow from conntrack dump due to parsing error: %v", err)
+			klog.Infof("Ignoring the flow from conntrack dump due to parsing error: %v", err)
 			continue
 		}
 		if conn != nil {
@@ -97,7 +97,7 @@ func (ct *connTrackOvsCtl) ovsAppctlDumpConnections(zoneFilter uint16) ([]*flowe
 		}
 	}
 
-	klog.V(2).Infof("FlowExporter considered flows in conntrack: %d", len(antreaConns))
+	klog.Infof("FlowExporter considered flows in conntrack: %d", len(antreaConns))
 	return antreaConns, len(outputFlow), nil
 }
 

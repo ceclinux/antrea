@@ -260,7 +260,7 @@ func (c *client) addFlows(cache *flowCategoryCache, flowCacheKey string, flows [
 	// If a flow cache entry already exists for the key, return immediately. Otherwise, add the flows to the switch
 	// and populate the cache with them.
 	if ok {
-		klog.V(2).Infof("Flows with cache key %s are already installed", flowCacheKey)
+		klog.Infof("Flows with cache key %s are already installed", flowCacheKey)
 		return nil
 	}
 	err := c.ofEntryOperations.AddAll(flows)
@@ -726,7 +726,7 @@ func (c *client) deleteFlowsByRoundNum(roundNum uint64) error {
 
 func (c *client) DeleteStaleFlows() error {
 	if c.roundInfo.PrevRoundNum == nil {
-		klog.V(2).Info("Previous round number is unset, no flows to delete")
+		klog.Info("Previous round number is unset, no flows to delete")
 		return nil
 	}
 	return c.deleteFlowsByRoundNum(*c.roundInfo.PrevRoundNum)

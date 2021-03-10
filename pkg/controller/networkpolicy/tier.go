@@ -130,7 +130,7 @@ func (n *NetworkPolicyController) InitializeTiers() {
 		oldTier, err := n.tierLister.Get(t.Name)
 		if err == nil {
 			// Tier is already present.
-			klog.V(2).Infof("%s Tier already created", t.Name)
+			klog.Infof("%s Tier already created", t.Name)
 			// Update Tier Priority if it is not set to desired Priority.
 			expPrio := priorityMap[t.Name]
 			if oldTier.Spec.Priority != expPrio {
@@ -152,7 +152,7 @@ func (n *NetworkPolicyController) initTier(t *secv1alpha1.Tier) {
 	backoff := 1 * time.Second
 	retryAttempt := 1
 	for {
-		klog.V(2).Infof("Creating %s Tier", t.Name)
+		klog.Infof("Creating %s Tier", t.Name)
 		_, err = n.crdClient.SecurityV1alpha1().Tiers().Create(context.TODO(), t, metav1.CreateOptions{})
 		// Attempt to recreate Tier after a backoff only if it does not exist.
 		if err != nil && !errors.IsAlreadyExists(err) {
@@ -180,7 +180,7 @@ func (n *NetworkPolicyController) updateTier(t *secv1alpha1.Tier) {
 	backoff := 1 * time.Second
 	retryAttempt := 1
 	for {
-		klog.V(2).Infof("Updating %s Tier", t.Name)
+		klog.Infof("Updating %s Tier", t.Name)
 		_, err = n.crdClient.SecurityV1alpha1().Tiers().Update(context.TODO(), t, metav1.UpdateOptions{})
 		// Attempt to update Tier after a backoff.
 		if err != nil {

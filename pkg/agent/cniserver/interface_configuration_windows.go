@@ -138,10 +138,10 @@ func (ic *ifConfigurator) configureContainerLink(
 	}
 	// Attach HNSEndpoint to the container. Note that HNSEndpoint must be attached to the container before adding OVS port,
 	// otherwise an error will be returned when creating OVS port.
-	klog.V(2).Infof("Configuring IP address for container %s", containerID)
+	klog.Infof("Configuring IP address for container %s", containerID)
 	containerIface, err := attachContainerLink(endpoint, containerID, containerNetNS, containerIFDev)
 	if err != nil {
-		klog.V(2).Infof("Failed to attach HNS Endpoint to the container, remove it.")
+		klog.Infof("Failed to attach HNS Endpoint to the container, remove it.")
 		ic.removeHNSEndpoint(endpoint, containerID)
 		return fmt.Errorf("failed to configure container IP: %v", err)
 	}
@@ -285,7 +285,7 @@ func attachContainerLink(ep *hcsshim.HNSEndpoint, containerID, sandbox, containe
 	}
 
 	if attached {
-		klog.V(2).Infof("HNS Endpoint %s already attached on container %s", ep.Id, containerID)
+		klog.Infof("HNS Endpoint %s already attached on container %s", ep.Id, containerID)
 	} else {
 		if hcnEp == nil {
 			// Docker runtime
@@ -312,7 +312,7 @@ func attachContainerLink(ep *hcsshim.HNSEndpoint, containerID, sandbox, containe
 // advertiseContainerAddr returns immediately as the address is advertised automatically after it is configured on an
 // network interface on Windows.
 func (ic *ifConfigurator) advertiseContainerAddr(containerNetNS string, containerIfaceName string, result *current.Result) error {
-	klog.V(2).Info("Send gratuitous ARP from container interface is not supported on Windows, return nil")
+	klog.Info("Send gratuitous ARP from container interface is not supported on Windows, return nil")
 	return nil
 }
 

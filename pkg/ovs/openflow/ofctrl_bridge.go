@@ -336,7 +336,7 @@ func (b *OFBridge) IsConnected() bool {
 func (b *OFBridge) AddFlowsInBundle(addflows []Flow, modFlows []Flow, delFlows []Flow) error {
 	// If no Openflow entries are requested to be added or modified or deleted on the OVS bridge, return immediately.
 	if len(addflows) == 0 && len(modFlows) == 0 && len(delFlows) == 0 {
-		klog.V(2).Info("No Openflow entries need to be synced to the OVS bridge, returning")
+		klog.Info("No Openflow entries need to be synced to the OVS bridge, returning")
 		return nil
 	}
 	// Create a new transaction.
@@ -413,7 +413,7 @@ func (b *OFBridge) AddFlowsInBundle(addflows []Flow, modFlows []Flow, delFlows [
 func (b *OFBridge) AddOFEntriesInBundle(addEntries []OFEntry, modEntries []OFEntry, delEntries []OFEntry) error {
 	// If no Openflow entries are requested to be added or modified or deleted on the OVS bridge, return immediately.
 	if len(addEntries) == 0 && len(modEntries) == 0 && len(delEntries) == 0 {
-		klog.V(2).Info("No Openflow entries need to be synced to the OVS bridge, returning")
+		klog.Info("No Openflow entries need to be synced to the OVS bridge, returning")
 		return nil
 	}
 	type entryOperation struct {

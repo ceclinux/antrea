@@ -321,7 +321,7 @@ func (s *store) dispatchEvent(event antreastorage.InternalEvent) {
 		if len(blockedWatchers) == 0 {
 			return
 		}
-		klog.V(2).Infof("%d watchers were not available to receive event %+v immediately", len(blockedWatchers), event)
+		klog.Infof("%d watchers were not available to receive event %+v immediately", len(blockedWatchers), event)
 
 		// Then try to send events to blocked watchers with a timeout. If it
 		// timeouts, it means the watcher is too slow to consume the events or the

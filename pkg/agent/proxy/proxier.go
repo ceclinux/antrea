@@ -112,7 +112,7 @@ func (p *proxier) removeStaleServices() {
 			continue
 		}
 		svcInfo := svcPort.(*types.ServiceInfo)
-		klog.V(2).Infof("Removing stale Service: %s %s", svcPortName.Name, svcInfo.String())
+		klog.Infof("Removing stale Service: %s %s", svcPortName.Name, svcInfo.String())
 		if err := p.ofClient.UninstallServiceFlows(svcInfo.ClusterIP(), uint16(svcInfo.Port()), svcInfo.OFProtocol); err != nil {
 			klog.Errorf("Failed to remove flows of Service %v: %v", svcPortName, err)
 			continue
@@ -171,10 +171,10 @@ func (p *proxier) removeEndpoint(endpoint k8sproxy.Endpoint, protocol binding.Pr
 			return false, err
 		}
 		delete(p.endpointReferenceCounter, key)
-		klog.V(2).Infof("Endpoint %s/%s removed", endpoint.String(), protocol)
+		klog.Infof("Endpoint %s/%s removed", endpoint.String(), protocol)
 	} else if count > 1 {
 		p.endpointReferenceCounter[key] = count - 1
-		klog.V(2).Infof("Stale Endpoint %s/%s is still referenced by other Services, decrementing reference count by 1", endpoint.String(), protocol)
+		klog.Infof("Stale Endpoint %s/%s is still referenced by other Services, decrementing reference count by 1", endpoint.String(), protocol)
 		return false, nil
 	}
 	return true, nil
@@ -261,7 +261,7 @@ func (p *proxier) installServices() {
 			endpointUpdateList = append(endpointUpdateList, endpoint)
 		}
 		if len(endpoints) < len(endpointsInstalled) { // There are Endpoints which expired.
-			klog.V(2).Infof("Some Endpoints of Service %s removed, updating Endpoints", svcInfo.String())
+			klog.Infof("Some Endpoints of Service %s removed, updating Endpoints", svcInfo.String())
 			needUpdateEndpoints = true
 		}
 
@@ -283,9 +283,9 @@ func (p *proxier) installServices() {
 		}
 
 		if pSvcInfo != nil {
-			klog.V(2).Infof("Updating Service %s %s", svcPortName.Name, svcInfo.String())
+			klog.Infof("Updating Service %s %s", svcPortName.Name, svcInfo.String())
 		} else {
-			klog.V(2).Infof("Installing Service %s %s", svcPortName.Name, svcInfo.String())
+			klog.Infof("Installing Service %s %s", svcPortName.Name, svcInfo.String())
 		}
 
 		if needUpdateEndpoints {
@@ -367,7 +367,7 @@ func (p *proxier) installServices() {
 // to protect these two maps.
 func (p *proxier) syncProxyRules() {
 	if !p.isInitialized() {
-		klog.V(4).Info("Not syncing rules until both Services and Endpoints have been synced")
+		klog.Info("Not syncing rules until both Services and Endpoints have been synced")
 		return
 	}
 
@@ -379,7 +379,7 @@ func (p *proxier) syncProxyRules() {
 		} else {
 			metrics.SyncProxyDuration.Observe(delta.Seconds())
 		}
-		klog.V(4).Infof("syncProxyRules took %v", time.Since(start))
+		klog.Infof("syncProxyRules took %v", time.Since(start))
 	}()
 
 	// Protect Service and endpoints maps, which can be read by
@@ -585,7 +585,7 @@ func NewProxier(
 		corev1.EventSource{Component: componentName, Host: hostname},
 	)
 	metrics.Register()
-	klog.V(2).Infof("Creating proxier with IPv6 enabled=%t", isIPv6)
+	klog.Infof("Creating proxier with IPv6 enabled=%t", isIPv6)
 
 	enableEndpointSlice := features.DefaultFeatureGate.Enabled(features.EndpointSlice)
 

@@ -145,7 +145,7 @@ func (v *NetworkPolicyValidator) Validate(ar *admv1.AdmissionReview) *admv1.Admi
 	oldRaw := ar.Request.OldObject.Raw
 	switch ar.Request.Kind.Kind {
 	case "Tier":
-		klog.V(2).Info("Validating Tier CRD")
+		klog.Info("Validating Tier CRD")
 		var curTier, oldTier secv1alpha1.Tier
 		if curRaw != nil {
 			if err := json.Unmarshal(curRaw, &curTier); err != nil {
@@ -161,7 +161,7 @@ func (v *NetworkPolicyValidator) Validate(ar *admv1.AdmissionReview) *admv1.Admi
 		}
 		msg, allowed = v.validateTier(&curTier, &oldTier, op, ui)
 	case "ClusterGroup":
-		klog.V(2).Info("Validating ClusterGroup CRD")
+		klog.Info("Validating ClusterGroup CRD")
 		var curCG, oldCG corev1a2.ClusterGroup
 		if curRaw != nil {
 			if err := json.Unmarshal(curRaw, &curCG); err != nil {
@@ -177,7 +177,7 @@ func (v *NetworkPolicyValidator) Validate(ar *admv1.AdmissionReview) *admv1.Admi
 		}
 		msg, allowed = v.validateAntreaGroup(&curCG, &oldCG, op, ui)
 	case "ClusterNetworkPolicy":
-		klog.V(2).Info("Validating Antrea ClusterNetworkPolicy CRD")
+		klog.Info("Validating Antrea ClusterNetworkPolicy CRD")
 		var curCNP, oldCNP secv1alpha1.ClusterNetworkPolicy
 		if curRaw != nil {
 			if err := json.Unmarshal(curRaw, &curCNP); err != nil {
@@ -193,7 +193,7 @@ func (v *NetworkPolicyValidator) Validate(ar *admv1.AdmissionReview) *admv1.Admi
 		}
 		msg, allowed = v.validateAntreaPolicy(&curCNP, &oldCNP, op, ui)
 	case "NetworkPolicy":
-		klog.V(2).Info("Validating Antrea NetworkPolicy CRD")
+		klog.Info("Validating Antrea NetworkPolicy CRD")
 		var curANP, oldANP secv1alpha1.NetworkPolicy
 		if curRaw != nil {
 			if err := json.Unmarshal(curRaw, &curANP); err != nil {
@@ -288,7 +288,7 @@ func (v *NetworkPolicyValidator) validateAntreaGroup(curCG, oldCG *corev1a2.Clus
 	reason := ""
 	switch op {
 	case admv1.Create:
-		klog.V(2).Info("Validating CREATE request for ClusterGroup")
+		klog.Info("Validating CREATE request for ClusterGroup")
 		for _, val := range v.groupValidators {
 			reason, allowed = val.createValidate(curCG, userInfo)
 			if !allowed {
@@ -296,7 +296,7 @@ func (v *NetworkPolicyValidator) validateAntreaGroup(curCG, oldCG *corev1a2.Clus
 			}
 		}
 	case admv1.Update:
-		klog.V(2).Info("Validating UPDATE request for ClusterGroup")
+		klog.Info("Validating UPDATE request for ClusterGroup")
 		for _, val := range v.groupValidators {
 			reason, allowed = val.updateValidate(curCG, oldCG, userInfo)
 			if !allowed {
@@ -304,7 +304,7 @@ func (v *NetworkPolicyValidator) validateAntreaGroup(curCG, oldCG *corev1a2.Clus
 			}
 		}
 	case admv1.Delete:
-		klog.V(2).Info("Validating DELETE request for ClusterGroup")
+		klog.Info("Validating DELETE request for ClusterGroup")
 		for _, val := range v.groupValidators {
 			reason, allowed = val.deleteValidate(oldCG, userInfo)
 			if !allowed {
@@ -321,7 +321,7 @@ func (v *NetworkPolicyValidator) validateTier(curTier, oldTier *secv1alpha1.Tier
 	reason := ""
 	switch op {
 	case admv1.Create:
-		klog.V(2).Info("Validating CREATE request for Tier")
+		klog.Info("Validating CREATE request for Tier")
 		for _, val := range v.tierValidators {
 			reason, allowed = val.createValidate(curTier, userInfo)
 			if !allowed {
@@ -330,7 +330,7 @@ func (v *NetworkPolicyValidator) validateTier(curTier, oldTier *secv1alpha1.Tier
 		}
 	case admv1.Update:
 		// Tier priority updates are not allowed
-		klog.V(2).Info("Validating UPDATE request for Tier")
+		klog.Info("Validating UPDATE request for Tier")
 		for _, val := range v.tierValidators {
 			reason, allowed = val.updateValidate(curTier, oldTier, userInfo)
 			if !allowed {
@@ -338,7 +338,7 @@ func (v *NetworkPolicyValidator) validateTier(curTier, oldTier *secv1alpha1.Tier
 			}
 		}
 	case admv1.Delete:
-		klog.V(2).Info("Validating DELETE request for Tier")
+		klog.Info("Validating DELETE request for Tier")
 		for _, val := range v.tierValidators {
 			reason, allowed = val.deleteValidate(oldTier, userInfo)
 			if !allowed {

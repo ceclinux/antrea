@@ -103,7 +103,7 @@ func (c *Client) AddRoutes(podCIDR *net.IPNet, peerNodeIP, peerGwIP net.IP) erro
 	if found {
 		rt := obj.(*netroute.Route)
 		if rt.GatewayAddress.Equal(peerGwIP) {
-			klog.V(4).Infof("Route with destination %s already exists", podCIDR.String())
+			klog.Infof("Route with destination %s already exists", podCIDR.String())
 			return nil
 		}
 		// Remove the existing route entry if the gateway address is not as expected.
@@ -120,7 +120,7 @@ func (c *Client) AddRoutes(podCIDR *net.IPNet, peerNodeIP, peerGwIP net.IP) erro
 		DestinationSubnet: podCIDR,
 		GatewayAddress:    peerGwIP,
 	})
-	klog.V(2).Infof("Added route with destination %s via %s on host gateway", podCIDR.String(), peerGwIP.String())
+	klog.Infof("Added route with destination %s via %s on host gateway", podCIDR.String(), peerGwIP.String())
 	return nil
 }
 
@@ -129,7 +129,7 @@ func (c *Client) AddRoutes(podCIDR *net.IPNet, peerNodeIP, peerGwIP net.IP) erro
 func (c *Client) DeleteRoutes(podCIDR *net.IPNet) error {
 	obj, found := c.hostRoutes.Load(podCIDR.String())
 	if !found {
-		klog.V(2).Infof("Route with destination %s not exists", podCIDR.String())
+		klog.Infof("Route with destination %s not exists", podCIDR.String())
 		return nil
 	}
 
@@ -138,7 +138,7 @@ func (c *Client) DeleteRoutes(podCIDR *net.IPNet) error {
 		return err
 	}
 	c.hostRoutes.Delete(podCIDR.String())
-	klog.V(2).Infof("Deleted route with destination %s from host gateway", podCIDR.String())
+	klog.Infof("Deleted route with destination %s from host gateway", podCIDR.String())
 	return nil
 }
 

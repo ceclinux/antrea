@@ -87,7 +87,7 @@ func (monitor *agentMonitor) syncAgentCRD() {
 // So when the pod restarts, it will update this monitoring CRD instead of creating a new one.
 func (monitor *agentMonitor) getAgentCRD() (*v1beta1.AntreaAgentInfo, error) {
 	crdName := monitor.querier.GetNodeConfig().Name
-	klog.V(2).Infof("Getting agent monitoring CRD %+v", crdName)
+	klog.Infof("Getting agent monitoring CRD %+v", crdName)
 	return monitor.client.ClusterinformationV1beta1().AntreaAgentInfos().Get(context.TODO(), crdName, metav1.GetOptions{})
 }
 
@@ -95,13 +95,13 @@ func (monitor *agentMonitor) getAgentCRD() (*v1beta1.AntreaAgentInfo, error) {
 func (monitor *agentMonitor) createAgentCRD() (*v1beta1.AntreaAgentInfo, error) {
 	agentCRD := new(v1beta1.AntreaAgentInfo)
 	monitor.querier.GetAgentInfo(agentCRD, false)
-	klog.V(2).Infof("Creating agent monitoring CRD %+v", agentCRD)
+	klog.Infof("Creating agent monitoring CRD %+v", agentCRD)
 	return monitor.client.ClusterinformationV1beta1().AntreaAgentInfos().Create(context.TODO(), agentCRD, metav1.CreateOptions{})
 }
 
 // updateAgentCRD updates the monitoring CRD.
 func (monitor *agentMonitor) updateAgentCRD(partial bool) (*v1beta1.AntreaAgentInfo, error) {
 	monitor.querier.GetAgentInfo(monitor.agentCRD, partial)
-	klog.V(2).Infof("Updating agent monitoring CRD %+v, partial: %t", monitor.agentCRD, partial)
+	klog.Infof("Updating agent monitoring CRD %+v, partial: %t", monitor.agentCRD, partial)
 	return monitor.client.ClusterinformationV1beta1().AntreaAgentInfos().Update(context.TODO(), monitor.agentCRD, metav1.UpdateOptions{})
 }

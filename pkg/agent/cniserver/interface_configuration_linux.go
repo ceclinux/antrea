@@ -162,11 +162,11 @@ func (ic *ifConfigurator) configureContainerLinkSriov(
 		if err != nil {
 			return fmt.Errorf("failed to set link up to VF netdevice %s: %v", containerIfaceName, err)
 		}
-		klog.V(2).Infof("Setup interfaces host: %s, container %s", repPortName, containerIfaceName)
+		klog.Infof("Setup interfaces host: %s, container %s", repPortName, containerIfaceName)
 		containerIface.Name = containerIfaceName
 		containerIface.Mac = link.Attrs().HardwareAddr.String()
 		containerIface.Sandbox = netns.Path()
-		klog.V(2).Infof("Configuring IP address for container %s", containerID)
+		klog.Infof("Configuring IP address for container %s", containerID)
 		// result.Interfaces must be set before this.
 		if err := ipam.ConfigureIface(containerIface.Name, result); err != nil {
 			return fmt.Errorf("failed to configure IP address for container %s: %v", containerID, err)
@@ -196,7 +196,7 @@ func (ic *ifConfigurator) configureContainerLinkVeth(
 	result.Interfaces = []*current.Interface{hostIface, containerIface}
 
 	if err := ns.WithNetNSPath(containerNetNS, func(hostNS ns.NetNS) error {
-		klog.V(2).Infof("Creating veth devices (%s, %s) for container %s", containerIfaceName, hostIfaceName, containerID)
+		klog.Infof("Creating veth devices (%s, %s) for container %s", containerIfaceName, hostIfaceName, containerID)
 		hostVeth, containerVeth, err := ip.SetupVethWithName(containerIfaceName, hostIfaceName, mtu, hostNS)
 		if err != nil {
 			return fmt.Errorf("failed to create veth devices for container %s: %v", containerID, err)
@@ -211,7 +211,7 @@ func (ic *ifConfigurator) configureContainerLinkVeth(
 			}
 		}
 
-		klog.V(2).Infof("Configuring IP address for container %s", containerID)
+		klog.Infof("Configuring IP address for container %s", containerID)
 		// result.Interfaces must be set before this.
 		if err := ipam.ConfigureIface(containerIface.Name, result); err != nil {
 			return fmt.Errorf("failed to configure IP address for container %s: %v", containerID, err)
@@ -249,7 +249,7 @@ func (ic *ifConfigurator) advertiseContainerAddr(containerNetNS string, containe
 			}
 		}
 		if targetIP == nil {
-			klog.V(2).Infof("No IPv4 address found for container interface %s in ns %s, skip sending Gratuitous ARP", containerIfaceName, containerNetNS)
+			klog.Infof("No IPv4 address found for container interface %s in ns %s, skip sending Gratuitous ARP", containerIfaceName, containerNetNS)
 			return nil
 		}
 		ticker := time.NewTicker(50 * time.Millisecond)
@@ -288,24 +288,24 @@ func (ic *ifConfigurator) configureContainerLink(
 		if !ic.isOvsHardwareOffloadEnabled {
 			return fmt.Errorf("OVS is configured with hardware offload disabled, but SR-IOV VF was requested; please set hardware offload to true via antrea yaml")
 		}
-		klog.V(2).Infof("Moving SR-IOV %s device to network namespace of container %s", sriovVFDeviceID, containerID)
+		klog.Infof("Moving SR-IOV %s device to network namespace of container %s", sriovVFDeviceID, containerID)
 		// Move SR-IOV VF to network namespace
 		return ic.configureContainerLinkSriov(podName, podNamespace, containerID, containerNetNS, containerIfaceName, mtu, sriovVFDeviceID, result)
 	} else {
-		klog.V(2).Infof("Create veth pair for container %s", containerID)
+		klog.Infof("Create veth pair for container %s", containerID)
 		// Create veth pair and link up
 		return ic.configureContainerLinkVeth(podName, podNamespace, containerID, containerNetNS, containerIfaceName, mtu, result)
 	}
 }
 
 func (ic *ifConfigurator) removeContainerLink(containerID, hostInterfaceName string) error {
-	klog.V(2).Infof("Deleting veth devices for container %s", containerID)
+	klog.Infof("Deleting veth devices for container %s", containerID)
 	// Don't return an error if the device is already removed as CniDel can be called multiple times.
 	if err := ip.DelLinkByName(hostInterfaceName); err != nil {
 		if err != ip.ErrLinkNotFound {
 			return fmt.Errorf("failed to delete veth devices for container %s: %v", containerID, err)
 		}
-		klog.V(2).Infof("Did not find interface %s for container %s", hostInterfaceName, containerID)
+		klog.Infof("Did not find interface %s for container %s", hostInterfaceName, containerID)
 	}
 	return nil
 }

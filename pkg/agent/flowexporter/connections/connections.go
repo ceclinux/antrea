@@ -116,7 +116,7 @@ func (cs *ConnectionStore) addOrUpdateConn(conn *flowexporter.Connection) {
 		existingConn.IsActive = true
 		// Reassign the flow to update the map
 		cs.connections[connKey] = *existingConn
-		klog.V(4).Infof("Antrea flow updated: %v", existingConn)
+		klog.Infof("Antrea flow updated: %v", existingConn)
 	} else {
 		// sourceIP/destinationIP are mapped only to local pods and not remote pods.
 		var srcFound, dstFound bool
@@ -157,7 +157,7 @@ func (cs *ConnectionStore) addOrUpdateConn(conn *flowexporter.Connection) {
 		// Retrieve NetworkPolicy Name and Namespace by using the ingress and egress
 		// IDs stored in the connection label.
 		if len(conn.Labels) != 0 {
-			klog.V(4).Infof("connection label: %x; label masks: %x", conn.Labels, conn.LabelsMask)
+			klog.Infof("connection label: %x; label masks: %x", conn.Labels, conn.LabelsMask)
 			ingressOfID := binary.LittleEndian.Uint32(conn.Labels[:4])
 			egressOfID := binary.LittleEndian.Uint32(conn.Labels[4:8])
 			if ingressOfID != 0 {
@@ -184,7 +184,7 @@ func (cs *ConnectionStore) addOrUpdateConn(conn *flowexporter.Connection) {
 			}
 		}
 		metrics.TotalAntreaConnectionsInConnTrackTable.Inc()
-		klog.V(4).Infof("New Antrea flow added: %v", conn)
+		klog.Infof("New Antrea flow added: %v", conn)
 		// Add new antrea connection to connection store
 		cs.connections[connKey] = *conn
 	}
@@ -217,7 +217,7 @@ func (cs *ConnectionStore) ForAllConnectionsDo(callback flowexporter.ConnectionM
 // then number of IPv6 connections).
 // TODO: As optimization, only poll invalid/closed connections during every poll, and poll the established connections right before the export.
 func (cs *ConnectionStore) Poll() ([]int, error) {
-	klog.V(2).Infof("Polling conntrack")
+	klog.Infof("Polling conntrack")
 
 	// Reset isActive flag for all connections in connection map before dumping flows in conntrack module.
 	// This is to specify that the connection and the flow record can be deleted after the next export.
@@ -256,7 +256,7 @@ func (cs *ConnectionStore) Poll() ([]int, error) {
 		return []int{}, err
 	}
 	metrics.MaxConnectionsInConnTrackTable.Set(float64(maxConns))
-	klog.V(2).Infof("Conntrack polling successful")
+	klog.Infof("Conntrack polling successful")
 
 	return connsLens, nil
 }

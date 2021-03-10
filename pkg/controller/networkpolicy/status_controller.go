@@ -257,7 +257,7 @@ func (c *StatusController) processNextWorkItem() bool {
 // many policies need to sync, some policies will have to wait in workqueue, during which their status updates can be
 // merged. Therefore, it shouldn't happen that each status update leads to one CR update.
 func (c *StatusController) syncHandler(key string) error {
-	klog.V(2).Infof("Syncing NetworkPolicy status for %s", key)
+	klog.Infof("Syncing NetworkPolicy status for %s", key)
 	internalNPObj, found, _ := c.internalNetworkPolicyStore.Get(key)
 	if !found {
 		// It has been deleted, cleaning its statuses.
@@ -299,7 +299,7 @@ func (c *StatusController) syncHandler(key string) error {
 		CurrentNodesRealized: int32(currentNodes),
 		DesiredNodesRealized: int32(desiredNodes),
 	}
-	klog.V(2).Infof("Updating NetworkPolicy %s status: %v", internalNP.SourceRef.ToString(), status)
+	klog.Infof("Updating NetworkPolicy %s status: %v", internalNP.SourceRef.ToString(), status)
 	if internalNP.SourceRef.Type == controlplane.AntreaNetworkPolicy {
 		return c.npControlInterface.UpdateAntreaNetworkPolicyStatus(internalNP.SourceRef.Namespace, internalNP.SourceRef.Name, status)
 	} else {

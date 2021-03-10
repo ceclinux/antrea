@@ -199,7 +199,7 @@ func (c *Client) writeEKSMangleRule(iptablesData *bytes.Buffer) {
 	// table. If it does not exist, we do not need to install this rule. If
 	// it does exist we can scan for the mark value and use that in our
 	// rule.
-	klog.V(2).Infof("Add iptable mangle rule for EKS to ensure correct reverse path for NodePort Service traffic")
+	klog.Infof("Add iptable mangle rule for EKS to ensure correct reverse path for NodePort Service traffic")
 	writeLine(iptablesData, []string{
 		"-A", antreaMangleChain,
 		"-m", "comment", "--comment", `"Antrea: AWS, primary ENI"`,
@@ -427,7 +427,7 @@ func (c *Client) Reconcile(podCIDRs []string) error {
 		if desiredGWs.Has(neighIP) {
 			continue
 		}
-		klog.V(4).Infof("Deleting orphaned IPv6 neighbor %v", actualNeigh)
+		klog.Infof("Deleting orphaned IPv6 neighbor %v", actualNeigh)
 		if err := netlink.NeighDel(actualNeigh); err != nil {
 			return err
 		}
@@ -553,7 +553,7 @@ func (c *Client) DeleteRoutes(podCIDR *net.IPNet) error {
 	routes, exists := c.nodeRoutes.Load(podCIDRStr)
 	if exists {
 		for _, r := range routes.([]*netlink.Route) {
-			klog.V(4).Infof("Deleting route %v", r)
+			klog.Infof("Deleting route %v", r)
 			if err := netlink.RouteDel(r); err != nil && err != unix.ESRCH {
 				return err
 			}

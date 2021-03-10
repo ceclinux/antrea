@@ -234,7 +234,7 @@ func (c *Controller) processTraceflowItem() bool {
 func (c *Controller) syncTraceflow(traceflowName string) error {
 	startTime := time.Now()
 	defer func() {
-		klog.V(4).Infof("Finished syncing Traceflow for %s. (%v)", traceflowName, time.Since(startTime))
+		klog.Infof("Finished syncing Traceflow for %s. (%v)", traceflowName, time.Since(startTime))
 	}()
 
 	tf, err := c.traceflowLister.Get(traceflowName)
@@ -276,7 +276,7 @@ func (c *Controller) startTraceflow(tf *opsv1alpha1.Traceflow) error {
 		return err
 	}
 	// Deploy flow entries for traceflow
-	klog.V(2).Infof("Deploy flow entries for Traceflow %s", tf.Name)
+	klog.Infof("Deploy flow entries for Traceflow %s", tf.Name)
 	err = c.ofClient.InstallTraceflowFlows(tf.Status.DataplaneTag)
 	if err != nil {
 		return err
@@ -315,7 +315,7 @@ func (c *Controller) validateTraceflow(tf *opsv1alpha1.Traceflow) error {
 func (c *Controller) injectPacket(tf *opsv1alpha1.Traceflow) error {
 	podInterfaces := c.interfaceStore.GetContainerInterfacesByPod(tf.Spec.Source.Pod, tf.Spec.Source.Namespace)
 	// Update Traceflow phase to Running.
-	klog.V(2).Infof("Injecting packet for Traceflow %s", tf.Name)
+	klog.Infof("Injecting packet for Traceflow %s", tf.Name)
 	c.injectedTagsMutex.Lock()
 	c.injectedTags[tf.Status.DataplaneTag] = tf.Name
 	c.injectedTagsMutex.Unlock()

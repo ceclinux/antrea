@@ -33,7 +33,7 @@ func (n *NetworkPolicyController) addANP(obj interface{}) {
 	// Create an internal NetworkPolicy object corresponding to this
 	// NetworkPolicy and enqueue task to internal NetworkPolicy Workqueue.
 	internalNP := n.processAntreaNetworkPolicy(np)
-	klog.V(2).Infof("Creating new internal NetworkPolicy %s for %s", internalNP.Name, internalNP.SourceRef.ToString())
+	klog.Infof("Creating new internal NetworkPolicy %s for %s", internalNP.Name, internalNP.SourceRef.ToString())
 	n.internalNetworkPolicyStore.Create(internalNP)
 	key := internalNetworkPolicyKeyFunc(np)
 	n.enqueueInternalNetworkPolicy(key)
@@ -48,7 +48,7 @@ func (n *NetworkPolicyController) updateANP(old, cur interface{}) {
 	// Update an internal NetworkPolicy, corresponding to this NetworkPolicy and
 	// enqueue task to internal NetworkPolicy Workqueue.
 	curInternalNP := n.processAntreaNetworkPolicy(curNP)
-	klog.V(2).Infof("Updating existing internal NetworkPolicy %s for %s", curInternalNP.Name, curInternalNP.SourceRef.ToString())
+	klog.Infof("Updating existing internal NetworkPolicy %s for %s", curInternalNP.Name, curInternalNP.SourceRef.ToString())
 	// Retrieve old secv1alpha1.NetworkPolicy object.
 	oldNP := old.(*secv1alpha1.NetworkPolicy)
 	// Old and current NetworkPolicy share the same key.
@@ -105,7 +105,7 @@ func (n *NetworkPolicyController) deleteANP(old interface{}) {
 	key := internalNetworkPolicyKeyFunc(np)
 	oldInternalNPObj, _, _ := n.internalNetworkPolicyStore.Get(key)
 	oldInternalNP := oldInternalNPObj.(*antreatypes.NetworkPolicy)
-	klog.V(2).Infof("Deleting internal NetworkPolicy %s for %s", oldInternalNP.Name, oldInternalNP.SourceRef.ToString())
+	klog.Infof("Deleting internal NetworkPolicy %s for %s", oldInternalNP.Name, oldInternalNP.SourceRef.ToString())
 	err := n.internalNetworkPolicyStore.Delete(key)
 	if err != nil {
 		klog.Errorf("Error deleting internal NetworkPolicy during Antrea NetworkPolicy %s delete: %v", np.Name, err)

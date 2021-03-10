@@ -1,10 +1,15 @@
 package egress
 
 import (
+	"context"
+
 	"fmt"
 	"sync"
 	"time"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/vmware-tanzu/antrea/pkg/agent"
@@ -28,26 +33,67 @@ const (
 func NewEgressController(
 	kubeClient clientset.Interface,
 	nodeName string,
+	antreaClientGetter agent.AntreaClientProvider,
+
 ) *Controller {
 	c := &Controller{
-		kubeClient: kubeClient,
+		kubeClient:           kubeClient,
+		antreaClientProvider: antreaClientGetter,
 	}
 	// Use nodeName to filter resources when watching resources.
 	// options := metav1.ListOptions{
 	// 	FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
 	// }
 	c.fullSyncGroup.Add(3)
-
+	options := metav1.ListOptions{
+		FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
+	}
 	c.networkPolicyWatcher = &watcher{
 		objectType: "EgressPolicy",
+		watchFunc: func() (watch.Interface, error) {
+			antreaClient, err := c.antreaClientProvider.GetAntreaClient()
+			if err != nil {
+				return nil, err
+			}
+			return antreaClient.ControlplaneV1beta2().NetworkPolicies().Watch(context.TODO(), options)
+		},
 		AddFunc: func(obj runtime.Object) error {
 			policy, ok := obj.(*v1beta2.EgressPolicy)
 			if !ok {
-				return fmt.Errorf("cannot convert to *v1beta1.NetworkPolicy: %v", obj)
+				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
 			}
-			klog.Infof("EgressPolicy %+v applied to Pods on this Node", policy)
+			klog.Infof("EgressPolicy %#v\n applied to Pods on this Node", policy)
 			return nil
 		},
+		UpdateFunc: func(obj runtime.Object) error {
+			_, ok := obj.(*v1beta2.EgressPolicy)
+			if !ok {
+				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
+			}
+			return nil
+		},
+		DeleteFunc: func(obj runtime.Object) error {
+			policy, ok := obj.(*v1beta2.EgressPolicy)
+			if !ok {
+				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
+			}
+			klog.Infof("EgressPolicy %#v\n no longer applied to Pods on this Node", policy)
+			return nil
+		},
+		ReplaceFunc: func(objs []runtime.Object) error {
+			policies := make([]*v1beta2.EgressPolicy, len(objs))
+			var ok bool
+			for i := range objs {
+				policies[i], ok = objs[i].(*v1beta2.EgressPolicy)
+				if !ok {
+					return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", objs[i])
+				}
+
+			}
+			return nil
+		},
+		fullSyncWaitGroup: &c.fullSyncGroup,
+		fullSynced:        false,
 	}
 	return c
 }
@@ -139,7 +185,7 @@ loop:
 			}
 			switch event.Type {
 			case watch.Added:
-				klog.V(2).Infof("Added %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Added %s (%#v)", w.objectType, event.Object)
 				initObjects = append(initObjects, event.Object)
 			case watch.Bookmark:
 				break loop
@@ -171,19 +217,19 @@ loop:
 					klog.Errorf("Failed to handle added event: %v", err)
 					return
 				}
-				klog.V(2).Infof("Added %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Added %s (%#v)", w.objectType, event.Object)
 			case watch.Modified:
 				if err := w.UpdateFunc(event.Object); err != nil {
 					klog.Errorf("Failed to handle modified event: %v", err)
 					return
 				}
-				klog.V(2).Infof("Updated %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Updated %s (%#v)", w.objectType, event.Object)
 			case watch.Deleted:
 				if err := w.DeleteFunc(event.Object); err != nil {
 					klog.Errorf("Failed to handle deleted event: %v", err)
 					return
 				}
-				klog.V(2).Infof("Removed %s (%#v)", w.objectType, event.Object)
+				klog.Infof("Removed %s (%#v)", w.objectType, event.Object)
 			default:
 				klog.Errorf("Unknown event: %v", event)
 				return

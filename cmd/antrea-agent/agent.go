@@ -168,7 +168,7 @@ func run(o *Options) error {
 	statusManagerEnabled := antreaPolicyEnabled
 	loggingEnabled := antreaPolicyEnabled
 
-	egressController := egress.NewEgressController(k8sClient, nodeConfig.Name)
+	egressController := egress.NewEgressController(k8sClient, nodeConfig.Name, antreaClientProvider)
 
 	networkPolicyController, err := networkpolicy.NewNetworkPolicyController(
 		antreaClientProvider,

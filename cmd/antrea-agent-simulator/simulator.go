@@ -159,7 +159,7 @@ loop:
 			}
 			switch event.Type {
 			case watch.Added:
-				klog.V(2).Infof("Added %s (%#v)", w.name, event.Object)
+				klog.Infof("Added %s (%#v)", w.name, event.Object)
 				initCount++
 			case watch.Bookmark:
 				break loop
@@ -178,11 +178,11 @@ loop:
 			}
 			switch event.Type {
 			case watch.Added:
-				klog.V(2).Infof("Added %s (%#v)", w.name, event.Object)
+				klog.Infof("Added %s (%#v)", w.name, event.Object)
 			case watch.Modified:
-				klog.V(2).Infof("Updated %s (%#v)", w.name, event.Object)
+				klog.Infof("Updated %s (%#v)", w.name, event.Object)
 			case watch.Deleted:
-				klog.V(2).Infof("Removed %s (%#v)", w.name, event.Object)
+				klog.Infof("Removed %s (%#v)", w.name, event.Object)
 			default:
 				klog.Errorf("Unknown event: %v", event)
 				return

@@ -103,7 +103,7 @@ func (c *Client) EnsureChain(table string, chain string) error {
 		if err := ipt.NewChain(table, chain); err != nil {
 			return fmt.Errorf("error creating chain %s in table %s: %v", chain, table, err)
 		}
-		klog.V(2).Infof("Created chain %s in table %s", chain, table)
+		klog.Infof("Created chain %s in table %s", chain, table)
 	}
 	return nil
 }
@@ -137,7 +137,7 @@ func (c *Client) EnsureRule(table string, chain string, ruleSpec []string) error
 			return fmt.Errorf("error appending rule %v to table %s chain %s: %v", ruleSpec, table, chain, err)
 		}
 	}
-	klog.V(2).Infof("Appended rule %v to table %s chain %s", ruleSpec, table, chain)
+	klog.Infof("Appended rule %v to table %s chain %s", ruleSpec, table, chain)
 	return nil
 }
 
@@ -154,7 +154,7 @@ func (c *Client) DeleteRule(table string, chain string, ruleSpec []string) error
 		if err := c.ipts[idx].Delete(table, chain, ruleSpec...); err != nil {
 			return fmt.Errorf("error deleting rule %v from table %s chain %s: %v", ruleSpec, table, chain, err)
 		}
-		klog.V(2).Infof("Deleted rule %v from table %s chain %s", ruleSpec, table, chain)
+		klog.Infof("Deleted rule %v from table %s chain %s", ruleSpec, table, chain)
 	}
 	return nil
 }
@@ -170,7 +170,7 @@ func (c *Client) DeleteChain(table string, chain string) error {
 		if err != nil {
 			return fmt.Errorf("error deleting chain %s from table %s: %v", chain, table, err)
 		}
-		klog.V(2).Infof("Deleted chain %s from table %s", chain, table)
+		klog.Infof("Deleted chain %s from table %s", chain, table)
 	}
 	return nil
 }

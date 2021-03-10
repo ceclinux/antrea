@@ -293,7 +293,7 @@ func (fa *flowAggregator) initExportingProcess() error {
 		fa.set.ResetSet()
 		return fmt.Errorf("sending template set failed, err: %v", err)
 	}
-	klog.V(2).Infof("Initialized exporting process and sent %d bytes size of template set", bytesSent)
+	klog.Infof("Initialized exporting process and sent %d bytes size of template set", bytesSent)
 	return nil
 }
 
@@ -335,7 +335,7 @@ func (fa *flowAggregator) Run(stopCh <-chan struct{}) {
 
 func (fa *flowAggregator) sendFlowKeyRecord(key ipfixintermediate.FlowKey, record ipfixintermediate.AggregationFlowRecord) error {
 	if !record.ReadyToSend {
-		klog.V(4).Info("Skip sending record that is not correlated.")
+		klog.Info("Skip sending record that is not correlated.")
 		return nil
 	}
 	// TODO: more records per data set will be supported when go-ipfix supports size check when adding records
@@ -418,6 +418,6 @@ func (fa *flowAggregator) sendDataSet(dataSet ipfix.IPFIXSet) (int, error) {
 	if err != nil {
 		return 0, fmt.Errorf("error when sending data set: %v", err)
 	}
-	klog.V(4).Infof("Data set sent successfully. Bytes sent: %d", sentBytes)
+	klog.Infof("Data set sent successfully. Bytes sent: %d", sentBytes)
 	return sentBytes, nil
 }

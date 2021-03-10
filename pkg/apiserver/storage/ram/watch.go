@@ -23,7 +23,6 @@ import (
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/klog"
 
-	"github.com/vmware-tanzu/antrea/pkg/apis/controlplane"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/storage"
 )
 
@@ -120,14 +119,14 @@ func (w *storeWatcher) process(ctx context.Context, initEvents []storage.Interna
 		select {
 		case event, ok := <-w.input:
 			if !ok {
-				klog.V(4).Info("The input channel has been closed, stopping process for watcher")
+				klog.Info("The input channel has been closed, stopping process for watcher")
 				return
 			}
 			if event.GetResourceVersion() > resourceVersion {
 				w.sendWatchEvent(event, false)
 			}
 		case <-ctx.Done():
-			klog.V(4).Info("The context has been canceled, stopping process for watcher")
+			klog.Info("The context has been canceled, stopping process for watcher")
 			return
 		}
 	}
@@ -136,8 +135,10 @@ func (w *storeWatcher) process(ctx context.Context, initEvents []storage.Interna
 // sendWatchEvent converts an InternalEvent to watch.Event based on the watcher's selectors.
 // It sends the converted event to result channel, if not nil.
 func (w *storeWatcher) sendWatchEvent(event storage.InternalEvent, isInitEvent bool) {
-	// watchEvent := event.ToWatchEvent(w.selectors, isInitEvent)
-	watchEvent := &watch.Event{Type: watch.Added, Object: &controlplane.EgressPolicy{EgressIP: "1.1.1.1"}}
+	watchEvent := event.ToWatchEvent(w.selectors, isInitEvent)
+	// watchEvent := &watch.Event{Type: watch.Added, Object: &controlplane.EgressPolicy{EgressIP: "1.1.1.1"}}
+	klog.Infof("%#v\n", watchEvent)
+
 	if watchEvent == nil {
 		// Watcher is not interested in that object.
 		return

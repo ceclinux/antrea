@@ -116,7 +116,7 @@ func (c *StatusController) DeleteRuleRealization(ruleID string) {
 }
 
 func (c *StatusController) Resync(policyID types.UID) {
-	klog.V(2).Infof("Resyncing NetworkPolicyStatus for %s", policyID)
+	klog.Infof("Resyncing NetworkPolicyStatus for %s", policyID)
 	c.queue.Add(policyID)
 }
 
@@ -190,7 +190,7 @@ func (c *StatusController) syncHandler(uid types.UID) error {
 	}
 
 	// At this point, all desired rules have been realized and all undesired rules have been removed, report it to the antrea-controller.
-	klog.V(2).Infof("Syncing NetworkPolicyStatus for %s, generation: %v", uid, policy.Generation)
+	klog.Infof("Syncing NetworkPolicyStatus for %s, generation: %v", uid, policy.Generation)
 	status := &v1beta2.NetworkPolicyStatus{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: policy.Name,

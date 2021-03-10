@@ -114,7 +114,7 @@ func (m *Collector) collect() *statsCollection {
 			klog.Warningf("Cannot find NetworkPolicy that has ofID %v", ofID)
 			continue
 		}
-		klog.V(4).Infof("Converting ofID %v to policy %s", ofID, policyRef.ToString())
+		klog.Infof("Converting ofID %v to policy %s", ofID, policyRef.ToString())
 
 		var statsMap map[types.UID]*statsv1alpha1.TrafficStats
 		switch policyRef.Type {
@@ -148,7 +148,7 @@ func (m *Collector) report(curStatsCollection *statsCollection) error {
 	acnpStats := calculateDiff(curStatsCollection.antreaClusterNetworkPolicyStats, m.lastStatsCollection.antreaClusterNetworkPolicyStats)
 	anpStats := calculateDiff(curStatsCollection.antreaNetworkPolicyStats, m.lastStatsCollection.antreaNetworkPolicyStats)
 	if len(npStats) == 0 && len(acnpStats) == 0 && len(anpStats) == 0 {
-		klog.V(4).Info("No stats to report, skip reporting")
+		klog.Info("No stats to report, skip reporting")
 		return nil
 	}
 

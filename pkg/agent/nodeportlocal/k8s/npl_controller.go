@@ -314,7 +314,7 @@ func (c *NPLController) processNextWorkItem() bool {
 		klog.Errorf("Expected string in work queue but got %#v", obj)
 		return true
 	} else if err := c.syncPod(key); err == nil {
-		klog.V(2).Infof("Successfully processed key: %s, in queue", key)
+		klog.Infof("Successfully processed key: %s, in queue", key)
 		c.queue.Forget(key)
 	} else {
 		c.queue.AddRateLimited(key)
@@ -357,7 +357,7 @@ func (c *NPLController) deleteAllPortRulesIfAny(podIP string) error {
 // rules programmed in the system based on implementation type (e.g. IPTABLES).
 // This also removes Pod annotation from Pods that are not selected by Service annotation.
 func (c *NPLController) handleRemovePod(key string) error {
-	klog.V(2).Infof("Got delete event for Pod: %s", key)
+	klog.Infof("Got delete event for Pod: %s", key)
 	podIP, found := c.getPodIPFromCache(key)
 	if !found {
 		klog.Infof("IP address not found for Pod: %s", key)
@@ -376,7 +376,7 @@ func (c *NPLController) handleRemovePod(key string) error {
 // handleAddUpdatePod handles Pod Add, Update events and updates annotation if required.
 func (c *NPLController) handleAddUpdatePod(key string, obj interface{}) error {
 	pod := obj.(*corev1.Pod)
-	klog.V(2).Infof("Got add/update event for Pod: %s", key)
+	klog.Infof("Got add/update event for Pod: %s", key)
 
 	podIP := pod.Status.PodIP
 	if podIP == "" {
@@ -394,7 +394,7 @@ func (c *NPLController) handleAddUpdatePod(key string, obj interface{}) error {
 		}
 		return nil
 	}
-	klog.V(2).Infof("Pod %s is selected by a Service for which NodePortLocal is enabled", key)
+	klog.Infof("Pod %s is selected by a Service for which NodePortLocal is enabled", key)
 
 	var err error
 	var nodePort int
@@ -498,7 +498,7 @@ func (c *NPLController) GetPodsAndGenRules() error {
 			if npl.NodePort > c.portTable.EndPort || npl.NodePort < c.portTable.StartPort {
 				// ignoring annotation for now, it will be removed by the first call
 				// to handleAddUpdatePod
-				klog.V(2).Infof("Found invalid NodePortLocal annotation for Pod %s/%s: %s, ignoring it", pod.Namespace, pod.Name, nplAnnotation)
+				klog.Infof("Found invalid NodePortLocal annotation for Pod %s/%s: %s, ignoring it", pod.Namespace, pod.Name, nplAnnotation)
 				continue
 			} else {
 				allNPLPorts = append(allNPLPorts, rules.PodNodePort{

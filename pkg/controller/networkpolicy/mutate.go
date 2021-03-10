@@ -53,7 +53,7 @@ func (m *NetworkPolicyMutator) Mutate(ar *admv1.AdmissionReview) *admv1.Admissio
 
 	switch ar.Request.Kind.Kind {
 	case "ClusterNetworkPolicy":
-		klog.V(2).Info("Mutating Antrea ClusterNetworkPolicy CRD")
+		klog.Info("Mutating Antrea ClusterNetworkPolicy CRD")
 		var curACNP, oldACNP secv1alpha1.ClusterNetworkPolicy
 		if curRaw != nil {
 			if err := json.Unmarshal(curRaw, &curACNP); err != nil {
@@ -69,7 +69,7 @@ func (m *NetworkPolicyMutator) Mutate(ar *admv1.AdmissionReview) *admv1.Admissio
 		}
 		msg, allowed, patch = m.mutateAntreaPolicy(op, curACNP.Spec.Ingress, curACNP.Spec.Egress, curACNP.Spec.Tier)
 	case "NetworkPolicy":
-		klog.V(2).Info("Mutating Antrea NetworkPolicy CRD")
+		klog.Info("Mutating Antrea NetworkPolicy CRD")
 		var curANP, oldANP secv1alpha1.NetworkPolicy
 		if curRaw != nil {
 			if err := json.Unmarshal(curRaw, &curANP); err != nil {

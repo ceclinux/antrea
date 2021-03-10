@@ -461,7 +461,7 @@ func (i *Initializer) setupGatewayInterface() error {
 	// Create host Gateway port if it does not exist
 	gatewayIface, portExists := i.ifaceStore.GetInterface(i.hostGateway)
 	if !portExists {
-		klog.V(2).Infof("Creating gateway port %s on OVS bridge", i.hostGateway)
+		klog.Infof("Creating gateway port %s on OVS bridge", i.hostGateway)
 		gwPortUUID, err := i.ovsBridgeClient.CreateInternalPort(i.hostGateway, config.HostGatewayOFPort, nil)
 		if err != nil {
 			klog.Errorf("Failed to create gateway port %s on OVS bridge: %v", i.hostGateway, err)
@@ -471,13 +471,13 @@ func (i *Initializer) setupGatewayInterface() error {
 		gatewayIface.OVSPortConfig = &interfacestore.OVSPortConfig{PortUUID: gwPortUUID, OFPort: config.HostGatewayOFPort}
 		i.ifaceStore.AddInterface(gatewayIface)
 	} else {
-		klog.V(2).Infof("Gateway port %s already exists on OVS bridge", i.hostGateway)
+		klog.Infof("Gateway port %s already exists on OVS bridge", i.hostGateway)
 	}
 
 	// Idempotent operation to set the gateway's MTU: we perform this operation regardless of
 	// whether or not the gateway interface already exists, as the desired MTU may change across
 	// restarts.
-	klog.V(4).Infof("Setting gateway interface %s MTU to %d", i.hostGateway, i.nodeConfig.NodeMTU)
+	klog.Infof("Setting gateway interface %s MTU to %d", i.hostGateway, i.nodeConfig.NodeMTU)
 
 	i.ovsBridgeClient.SetInterfaceMTU(i.hostGateway, i.nodeConfig.NodeMTU)
 	if err := i.configureGatewayInterface(gatewayIface); err != nil {
@@ -499,7 +499,7 @@ func (i *Initializer) configureGatewayInterface(gatewayIface *interfacestore.Int
 			break
 		}
 		if _, ok := err.(util.LinkNotFound); ok {
-			klog.V(2).Infof("Not found host link for gateway %s, retry after 1s", i.hostGateway)
+			klog.Infof("Not found host link for gateway %s, retry after 1s", i.hostGateway)
 			time.Sleep(1 * time.Second)
 			continue
 		} else {
@@ -556,7 +556,7 @@ func (i *Initializer) setupDefaultTunnelInterface() error {
 		if i.networkConfig.TrafficEncapMode.SupportsEncap() &&
 			tunnelIface.TunnelInterfaceConfig.Type == i.networkConfig.TunnelType &&
 			tunnelIface.TunnelInterfaceConfig.LocalIP.Equal(localIP) {
-			klog.V(2).Infof("Tunnel port %s already exists on OVS bridge", tunnelPortName)
+			klog.Infof("Tunnel port %s already exists on OVS bridge", tunnelPortName)
 			// This could happen when upgrading from previous versions that didn't set it.
 			if shouldEnableCsum && !tunnelIface.TunnelInterfaceConfig.Csum {
 				if err := i.enableTunnelCsum(tunnelPortName); err != nil {
@@ -666,7 +666,7 @@ func (i *Initializer) initNodeLocalConfig() error {
 					klog.Warningf("One IPv4 PodCIDR is already configured on this Node, ignore the IPv4 Subnet CIDR %s", localSubnet.String())
 				} else {
 					i.nodeConfig.PodIPv4CIDR = localSubnet
-					klog.V(2).Infof("Configure IPv4 Subnet CIDR %s on this Node", localSubnet.String())
+					klog.Infof("Configure IPv4 Subnet CIDR %s on this Node", localSubnet.String())
 				}
 				continue
 			}
@@ -674,7 +674,7 @@ func (i *Initializer) initNodeLocalConfig() error {
 				klog.Warningf("One IPv6 PodCIDR is already configured on this Node, ignore the IPv6 subnet CIDR %s", localSubnet.String())
 			} else {
 				i.nodeConfig.PodIPv6CIDR = localSubnet
-				klog.V(2).Infof("Configure IPv6 Subnet CIDR %s on this Node", localSubnet.String())
+				klog.Infof("Configure IPv6 Subnet CIDR %s on this Node", localSubnet.String())
 			}
 		}
 		return nil
@@ -716,7 +716,7 @@ func (i *Initializer) initializeIPSec() error {
 	defer ticker.Stop()
 	for {
 		if _, err := os.Stat(ovsMonitorIPSecPID); err == nil {
-			klog.V(2).Infof("OVS IPsec monitor seems to be present")
+			klog.Infof("OVS IPsec monitor seems to be present")
 			break
 		}
 		select {
@@ -741,7 +741,7 @@ func (i *Initializer) readIPSecPSK() error {
 	}
 
 	// Usually one does not want to log the secret data.
-	klog.V(4).Infof("IPsec PSK value: %s", i.networkConfig.IPSecPSK)
+	klog.Infof("IPsec PSK value: %s", i.networkConfig.IPSecPSK)
 	return nil
 }
 

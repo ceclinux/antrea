@@ -136,7 +136,7 @@ func (n *NetworkPolicyController) createAppliedToGroupForClusterGroupCRD(intGrp 
 		UID:  intGrp.UID,
 		Name: key,
 	}
-	klog.V(2).Infof("Creating new AppliedToGroup %v corresponding to ClusterGroup CRD %s", appliedToGroup.UID, intGrp.Name)
+	klog.Infof("Creating new AppliedToGroup %v corresponding to ClusterGroup CRD %s", appliedToGroup.UID, intGrp.Name)
 	n.appliedToGroupStore.Create(appliedToGroup)
 	n.enqueueAppliedToGroup(key)
 	return key
@@ -160,7 +160,7 @@ func (n *NetworkPolicyController) createAddressGroupForCRD(peer secv1alpha1.Netw
 		Name:     normalizedUID,
 		Selector: *groupSelector,
 	}
-	klog.V(2).Infof("Creating new AddressGroup %s with selector (%s)", addressGroup.Name, addressGroup.Selector.NormalizedName)
+	klog.Infof("Creating new AddressGroup %s with selector (%s)", addressGroup.Name, addressGroup.Selector.NormalizedName)
 	n.addressGroupStore.Create(addressGroup)
 	return normalizedUID
 }
@@ -186,7 +186,7 @@ func (n *NetworkPolicyController) createAddressGroupForClusterGroupCRD(intGrp *a
 		GroupMembers: intGrp.GroupMembers,
 	}
 	n.addressGroupStore.Create(addressGroup)
-	klog.V(2).Infof("Created new AddressGroup %v corresponding to ClusterGroup CRD %s", addressGroup.UID, intGrp.Name)
+	klog.Infof("Created new AddressGroup %v corresponding to ClusterGroup CRD %s", addressGroup.UID, intGrp.Name)
 	return key
 }
 
