@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import (
 	v1beta2 "github.com/vmware-tanzu/antrea/pkg/apis/controlplane/v1beta2"
 	scheme "github.com/vmware-tanzu/antrea/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	rest "k8s.io/client-go/rest"
 )
@@ -35,9 +36,14 @@ type AppliedToGroupsGetter interface {
 
 // AppliedToGroupInterface has methods to work with AppliedToGroup resources.
 type AppliedToGroupInterface interface {
+	Create(ctx context.Context, appliedToGroup *v1beta2.AppliedToGroup, opts v1.CreateOptions) (*v1beta2.AppliedToGroup, error)
+	Update(ctx context.Context, appliedToGroup *v1beta2.AppliedToGroup, opts v1.UpdateOptions) (*v1beta2.AppliedToGroup, error)
+	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1beta2.AppliedToGroup, error)
 	List(ctx context.Context, opts v1.ListOptions) (*v1beta2.AppliedToGroupList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta2.AppliedToGroup, err error)
 	AppliedToGroupExpansion
 }
 
@@ -93,4 +99,68 @@ func (c *appliedToGroups) Watch(ctx context.Context, opts v1.ListOptions) (watch
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch(ctx)
+}
+
+// Create takes the representation of a appliedToGroup and creates it.  Returns the server's representation of the appliedToGroup, and an error, if there is any.
+func (c *appliedToGroups) Create(ctx context.Context, appliedToGroup *v1beta2.AppliedToGroup, opts v1.CreateOptions) (result *v1beta2.AppliedToGroup, err error) {
+	result = &v1beta2.AppliedToGroup{}
+	err = c.client.Post().
+		Resource("appliedtogroups").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(appliedToGroup).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// Update takes the representation of a appliedToGroup and updates it. Returns the server's representation of the appliedToGroup, and an error, if there is any.
+func (c *appliedToGroups) Update(ctx context.Context, appliedToGroup *v1beta2.AppliedToGroup, opts v1.UpdateOptions) (result *v1beta2.AppliedToGroup, err error) {
+	result = &v1beta2.AppliedToGroup{}
+	err = c.client.Put().
+		Resource("appliedtogroups").
+		Name(appliedToGroup.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(appliedToGroup).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// Delete takes name of the appliedToGroup and deletes it. Returns an error if one occurs.
+func (c *appliedToGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+	return c.client.Delete().
+		Resource("appliedtogroups").
+		Name(name).
+		Body(&opts).
+		Do(ctx).
+		Error()
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *appliedToGroups) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	var timeout time.Duration
+	if listOpts.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	}
+	return c.client.Delete().
+		Resource("appliedtogroups").
+		VersionedParams(&listOpts, scheme.ParameterCodec).
+		Timeout(timeout).
+		Body(&opts).
+		Do(ctx).
+		Error()
+}
+
+// Patch applies the patch and returns the patched appliedToGroup.
+func (c *appliedToGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta2.AppliedToGroup, err error) {
+	result = &v1beta2.AppliedToGroup{}
+	err = c.client.Patch(pt).
+		Resource("appliedtogroups").
+		Name(name).
+		SubResource(subresources...).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(data).
+		Do(ctx).
+		Into(result)
+	return
 }

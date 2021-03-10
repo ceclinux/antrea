@@ -23,6 +23,7 @@ import (
 	v1beta1 "github.com/vmware-tanzu/antrea/pkg/apis/controlplane/v1beta1"
 	scheme "github.com/vmware-tanzu/antrea/pkg/client/clientset/versioned/scheme"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	rest "k8s.io/client-go/rest"
 )
@@ -30,28 +31,31 @@ import (
 // EgressPoliciesGetter has a method to return a EgressPolicyInterface.
 // A group's client should implement this interface.
 type EgressPoliciesGetter interface {
-	EgressPolicies(namespace string) EgressPolicyInterface
+	EgressPolicies() EgressPolicyInterface
 }
 
 // EgressPolicyInterface has methods to work with EgressPolicy resources.
 type EgressPolicyInterface interface {
+	Create(ctx context.Context, egressPolicy *v1beta1.EgressPolicy, opts v1.CreateOptions) (*v1beta1.EgressPolicy, error)
+	Update(ctx context.Context, egressPolicy *v1beta1.EgressPolicy, opts v1.UpdateOptions) (*v1beta1.EgressPolicy, error)
+	Delete(ctx context.Context, name string, opts v1.DeleteOptions) error
+	DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error
 	Get(ctx context.Context, name string, opts v1.GetOptions) (*v1beta1.EgressPolicy, error)
 	List(ctx context.Context, opts v1.ListOptions) (*v1beta1.EgressPolicyList, error)
 	Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error)
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.EgressPolicy, err error)
 	EgressPolicyExpansion
 }
 
 // egressPolicies implements EgressPolicyInterface
 type egressPolicies struct {
 	client rest.Interface
-	ns     string
 }
 
 // newEgressPolicies returns a EgressPolicies
-func newEgressPolicies(c *ControlplaneV1beta1Client, namespace string) *egressPolicies {
+func newEgressPolicies(c *ControlplaneV1beta1Client) *egressPolicies {
 	return &egressPolicies{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -59,7 +63,6 @@ func newEgressPolicies(c *ControlplaneV1beta1Client, namespace string) *egressPo
 func (c *egressPolicies) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1beta1.EgressPolicy, err error) {
 	result = &v1beta1.EgressPolicy{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -76,7 +79,6 @@ func (c *egressPolicies) List(ctx context.Context, opts v1.ListOptions) (result 
 	}
 	result = &v1beta1.EgressPolicyList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -93,9 +95,72 @@ func (c *egressPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch(ctx)
+}
+
+// Create takes the representation of a egressPolicy and creates it.  Returns the server's representation of the egressPolicy, and an error, if there is any.
+func (c *egressPolicies) Create(ctx context.Context, egressPolicy *v1beta1.EgressPolicy, opts v1.CreateOptions) (result *v1beta1.EgressPolicy, err error) {
+	result = &v1beta1.EgressPolicy{}
+	err = c.client.Post().
+		Resource("egresspolicies").
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(egressPolicy).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// Update takes the representation of a egressPolicy and updates it. Returns the server's representation of the egressPolicy, and an error, if there is any.
+func (c *egressPolicies) Update(ctx context.Context, egressPolicy *v1beta1.EgressPolicy, opts v1.UpdateOptions) (result *v1beta1.EgressPolicy, err error) {
+	result = &v1beta1.EgressPolicy{}
+	err = c.client.Put().
+		Resource("egresspolicies").
+		Name(egressPolicy.Name).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(egressPolicy).
+		Do(ctx).
+		Into(result)
+	return
+}
+
+// Delete takes name of the egressPolicy and deletes it. Returns an error if one occurs.
+func (c *egressPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+	return c.client.Delete().
+		Resource("egresspolicies").
+		Name(name).
+		Body(&opts).
+		Do(ctx).
+		Error()
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *egressPolicies) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	var timeout time.Duration
+	if listOpts.TimeoutSeconds != nil {
+		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
+	}
+	return c.client.Delete().
+		Resource("egresspolicies").
+		VersionedParams(&listOpts, scheme.ParameterCodec).
+		Timeout(timeout).
+		Body(&opts).
+		Do(ctx).
+		Error()
+}
+
+// Patch applies the patch and returns the patched egressPolicy.
+func (c *egressPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta1.EgressPolicy, err error) {
+	result = &v1beta1.EgressPolicy{}
+	err = c.client.Patch(pt).
+		Resource("egresspolicies").
+		Name(name).
+		SubResource(subresources...).
+		VersionedParams(&opts, scheme.ParameterCodec).
+		Body(data).
+		Do(ctx).
+		Into(result)
+	return
 }

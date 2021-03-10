@@ -44,8 +44,8 @@ func (c *ControlplaneV1beta2Client) AppliedToGroups() AppliedToGroupInterface {
 	return newAppliedToGroups(c)
 }
 
-func (c *ControlplaneV1beta2Client) EgressPolicies(namespace string) EgressPolicyInterface {
-	return newEgressPolicies(c, namespace)
+func (c *ControlplaneV1beta2Client) EgressPolicies() EgressPolicyInterface {
+	return newEgressPolicies(c)
 }
 
 func (c *ControlplaneV1beta2Client) NetworkPolicies() NetworkPolicyInterface {

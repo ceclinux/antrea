@@ -30,8 +30,8 @@ func (c *FakeSecurityV1alpha1) ClusterNetworkPolicies() v1alpha1.ClusterNetworkP
 	return &FakeClusterNetworkPolicies{c}
 }
 
-func (c *FakeSecurityV1alpha1) EgressPolicies(namespace string) v1alpha1.EgressPolicyInterface {
-	return &FakeEgressPolicies{c, namespace}
+func (c *FakeSecurityV1alpha1) EgressPolicies() v1alpha1.EgressPolicyInterface {
+	return &FakeEgressPolicies{c}
 }
 
 func (c *FakeSecurityV1alpha1) NetworkPolicies(namespace string) v1alpha1.NetworkPolicyInterface {

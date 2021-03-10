@@ -108,7 +108,7 @@ message EgressGroup {
 }
 
 // +genclient
-// +genclient:onlyVerbs=list,get,watch
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 message EgressPolicy {
   // Standard metadata of the object.

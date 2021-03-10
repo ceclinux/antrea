@@ -50,7 +50,7 @@ func (v *version) ClusterNetworkPolicies() ClusterNetworkPolicyInformer {
 
 // EgressPolicies returns a EgressPolicyInformer.
 func (v *version) EgressPolicies() EgressPolicyInformer {
-	return &egressPolicyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+	return &egressPolicyInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // NetworkPolicies returns a NetworkPolicyInformer.

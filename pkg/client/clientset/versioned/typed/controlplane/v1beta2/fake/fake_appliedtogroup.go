@@ -1,4 +1,4 @@
-// Copyright 2020 Antrea Authors
+// Copyright 2021 Antrea Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
 )
@@ -71,4 +72,49 @@ func (c *FakeAppliedToGroups) List(ctx context.Context, opts v1.ListOptions) (re
 func (c *FakeAppliedToGroups) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewRootWatchAction(appliedtogroupsResource, opts))
+}
+
+// Create takes the representation of a appliedToGroup and creates it.  Returns the server's representation of the appliedToGroup, and an error, if there is any.
+func (c *FakeAppliedToGroups) Create(ctx context.Context, appliedToGroup *v1beta2.AppliedToGroup, opts v1.CreateOptions) (result *v1beta2.AppliedToGroup, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewRootCreateAction(appliedtogroupsResource, appliedToGroup), &v1beta2.AppliedToGroup{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1beta2.AppliedToGroup), err
+}
+
+// Update takes the representation of a appliedToGroup and updates it. Returns the server's representation of the appliedToGroup, and an error, if there is any.
+func (c *FakeAppliedToGroups) Update(ctx context.Context, appliedToGroup *v1beta2.AppliedToGroup, opts v1.UpdateOptions) (result *v1beta2.AppliedToGroup, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewRootUpdateAction(appliedtogroupsResource, appliedToGroup), &v1beta2.AppliedToGroup{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1beta2.AppliedToGroup), err
+}
+
+// Delete takes name of the appliedToGroup and deletes it. Returns an error if one occurs.
+func (c *FakeAppliedToGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+	_, err := c.Fake.
+		Invokes(testing.NewRootDeleteAction(appliedtogroupsResource, name), &v1beta2.AppliedToGroup{})
+	return err
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *FakeAppliedToGroups) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewRootDeleteCollectionAction(appliedtogroupsResource, listOpts)
+
+	_, err := c.Fake.Invokes(action, &v1beta2.AppliedToGroupList{})
+	return err
+}
+
+// Patch applies the patch and returns the patched appliedToGroup.
+func (c *FakeAppliedToGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1beta2.AppliedToGroup, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewRootPatchSubresourceAction(appliedtogroupsResource, name, pt, data, subresources...), &v1beta2.AppliedToGroup{})
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1beta2.AppliedToGroup), err
 }

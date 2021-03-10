@@ -58,7 +58,6 @@ message AddressGroupPatch {
 
 // +genclient
 // +genclient:nonNamespaced
-// +genclient:onlyVerbs=list,get,watch
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // AppliedToGroup is the message format of antrea/pkg/controller/types.AppliedToGroup in an API response.
 message AppliedToGroup {
@@ -103,7 +102,7 @@ message EgressGroup {
 }
 
 // +genclient
-// +genclient:onlyVerbs=list,get,watch
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 message EgressPolicy {
   // Standard metadata of the object.

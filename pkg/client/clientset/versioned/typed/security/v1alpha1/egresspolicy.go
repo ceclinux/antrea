@@ -31,7 +31,7 @@ import (
 // EgressPoliciesGetter has a method to return a EgressPolicyInterface.
 // A group's client should implement this interface.
 type EgressPoliciesGetter interface {
-	EgressPolicies(namespace string) EgressPolicyInterface
+	EgressPolicies() EgressPolicyInterface
 }
 
 // EgressPolicyInterface has methods to work with EgressPolicy resources.
@@ -50,14 +50,12 @@ type EgressPolicyInterface interface {
 // egressPolicies implements EgressPolicyInterface
 type egressPolicies struct {
 	client rest.Interface
-	ns     string
 }
 
 // newEgressPolicies returns a EgressPolicies
-func newEgressPolicies(c *SecurityV1alpha1Client, namespace string) *egressPolicies {
+func newEgressPolicies(c *SecurityV1alpha1Client) *egressPolicies {
 	return &egressPolicies{
 		client: c.RESTClient(),
-		ns:     namespace,
 	}
 }
 
@@ -65,7 +63,6 @@ func newEgressPolicies(c *SecurityV1alpha1Client, namespace string) *egressPolic
 func (c *egressPolicies) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EgressPolicy, err error) {
 	result = &v1alpha1.EgressPolicy{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
@@ -82,7 +79,6 @@ func (c *egressPolicies) List(ctx context.Context, opts v1.ListOptions) (result 
 	}
 	result = &v1alpha1.EgressPolicyList{}
 	err = c.client.Get().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -99,7 +95,6 @@ func (c *egressPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 	}
 	opts.Watch = true
 	return c.client.Get().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -110,7 +105,6 @@ func (c *egressPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 func (c *egressPolicies) Create(ctx context.Context, egressPolicy *v1alpha1.EgressPolicy, opts v1.CreateOptions) (result *v1alpha1.EgressPolicy, err error) {
 	result = &v1alpha1.EgressPolicy{}
 	err = c.client.Post().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(egressPolicy).
@@ -123,7 +117,6 @@ func (c *egressPolicies) Create(ctx context.Context, egressPolicy *v1alpha1.Egre
 func (c *egressPolicies) Update(ctx context.Context, egressPolicy *v1alpha1.EgressPolicy, opts v1.UpdateOptions) (result *v1alpha1.EgressPolicy, err error) {
 	result = &v1alpha1.EgressPolicy{}
 	err = c.client.Put().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		Name(egressPolicy.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -136,7 +129,6 @@ func (c *egressPolicies) Update(ctx context.Context, egressPolicy *v1alpha1.Egre
 // Delete takes name of the egressPolicy and deletes it. Returns an error if one occurs.
 func (c *egressPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		Name(name).
 		Body(&opts).
@@ -151,7 +143,6 @@ func (c *egressPolicies) DeleteCollection(ctx context.Context, opts v1.DeleteOpt
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
@@ -164,7 +155,6 @@ func (c *egressPolicies) DeleteCollection(ctx context.Context, opts v1.DeleteOpt
 func (c *egressPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.EgressPolicy, err error) {
 	result = &v1alpha1.EgressPolicy{}
 	err = c.client.Patch(pt).
-		Namespace(c.ns).
 		Resource("egresspolicies").
 		Name(name).
 		SubResource(subresources...).

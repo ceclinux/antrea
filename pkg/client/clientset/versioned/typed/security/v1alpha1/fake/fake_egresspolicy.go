@@ -31,7 +31,6 @@ import (
 // FakeEgressPolicies implements EgressPolicyInterface
 type FakeEgressPolicies struct {
 	Fake *FakeSecurityV1alpha1
-	ns   string
 }
 
 var egresspoliciesResource = schema.GroupVersionResource{Group: "security.antrea.tanzu.vmware.com", Version: "v1alpha1", Resource: "egresspolicies"}
@@ -41,8 +40,7 @@ var egresspoliciesKind = schema.GroupVersionKind{Group: "security.antrea.tanzu.v
 // Get takes name of the egressPolicy, and returns the corresponding egressPolicy object, and an error if there is any.
 func (c *FakeEgressPolicies) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EgressPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(egresspoliciesResource, c.ns, name), &v1alpha1.EgressPolicy{})
-
+		Invokes(testing.NewRootGetAction(egresspoliciesResource, name), &v1alpha1.EgressPolicy{})
 	if obj == nil {
 		return nil, err
 	}
@@ -52,8 +50,7 @@ func (c *FakeEgressPolicies) Get(ctx context.Context, name string, options v1.Ge
 // List takes label and field selectors, and returns the list of EgressPolicies that match those selectors.
 func (c *FakeEgressPolicies) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.EgressPolicyList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(egresspoliciesResource, egresspoliciesKind, c.ns, opts), &v1alpha1.EgressPolicyList{})
-
+		Invokes(testing.NewRootListAction(egresspoliciesResource, egresspoliciesKind, opts), &v1alpha1.EgressPolicyList{})
 	if obj == nil {
 		return nil, err
 	}
@@ -74,15 +71,13 @@ func (c *FakeEgressPolicies) List(ctx context.Context, opts v1.ListOptions) (res
 // Watch returns a watch.Interface that watches the requested egressPolicies.
 func (c *FakeEgressPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(egresspoliciesResource, c.ns, opts))
-
+		InvokesWatch(testing.NewRootWatchAction(egresspoliciesResource, opts))
 }
 
 // Create takes the representation of a egressPolicy and creates it.  Returns the server's representation of the egressPolicy, and an error, if there is any.
 func (c *FakeEgressPolicies) Create(ctx context.Context, egressPolicy *v1alpha1.EgressPolicy, opts v1.CreateOptions) (result *v1alpha1.EgressPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(egresspoliciesResource, c.ns, egressPolicy), &v1alpha1.EgressPolicy{})
-
+		Invokes(testing.NewRootCreateAction(egresspoliciesResource, egressPolicy), &v1alpha1.EgressPolicy{})
 	if obj == nil {
 		return nil, err
 	}
@@ -92,8 +87,7 @@ func (c *FakeEgressPolicies) Create(ctx context.Context, egressPolicy *v1alpha1.
 // Update takes the representation of a egressPolicy and updates it. Returns the server's representation of the egressPolicy, and an error, if there is any.
 func (c *FakeEgressPolicies) Update(ctx context.Context, egressPolicy *v1alpha1.EgressPolicy, opts v1.UpdateOptions) (result *v1alpha1.EgressPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(egresspoliciesResource, c.ns, egressPolicy), &v1alpha1.EgressPolicy{})
-
+		Invokes(testing.NewRootUpdateAction(egresspoliciesResource, egressPolicy), &v1alpha1.EgressPolicy{})
 	if obj == nil {
 		return nil, err
 	}
@@ -103,14 +97,13 @@ func (c *FakeEgressPolicies) Update(ctx context.Context, egressPolicy *v1alpha1.
 // Delete takes name of the egressPolicy and deletes it. Returns an error if one occurs.
 func (c *FakeEgressPolicies) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(egresspoliciesResource, c.ns, name), &v1alpha1.EgressPolicy{})
-
+		Invokes(testing.NewRootDeleteAction(egresspoliciesResource, name), &v1alpha1.EgressPolicy{})
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
 func (c *FakeEgressPolicies) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(egresspoliciesResource, c.ns, listOpts)
+	action := testing.NewRootDeleteCollectionAction(egresspoliciesResource, listOpts)
 
 	_, err := c.Fake.Invokes(action, &v1alpha1.EgressPolicyList{})
 	return err
@@ -119,8 +112,7 @@ func (c *FakeEgressPolicies) DeleteCollection(ctx context.Context, opts v1.Delet
 // Patch applies the patch and returns the patched egressPolicy.
 func (c *FakeEgressPolicies) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.EgressPolicy, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(egresspoliciesResource, c.ns, name, pt, data, subresources...), &v1alpha1.EgressPolicy{})
-
+		Invokes(testing.NewRootPatchSubresourceAction(egresspoliciesResource, name, pt, data, subresources...), &v1alpha1.EgressPolicy{})
 	if obj == nil {
 		return nil, err
 	}

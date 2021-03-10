@@ -24,10 +24,6 @@ type ClusterNetworkPolicyListerExpansion interface{}
 // EgressPolicyLister.
 type EgressPolicyListerExpansion interface{}
 
-// EgressPolicyNamespaceListerExpansion allows custom methods to be added to
-// EgressPolicyNamespaceLister.
-type EgressPolicyNamespaceListerExpansion interface{}
-
 // NetworkPolicyListerExpansion allows custom methods to be added to
 // NetworkPolicyLister.
 type NetworkPolicyListerExpansion interface{}

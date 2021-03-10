@@ -39,8 +39,8 @@ func (c *SecurityV1alpha1Client) ClusterNetworkPolicies() ClusterNetworkPolicyIn
 	return newClusterNetworkPolicies(c)
 }
 
-func (c *SecurityV1alpha1Client) EgressPolicies(namespace string) EgressPolicyInterface {
-	return newEgressPolicies(c, namespace)
+func (c *SecurityV1alpha1Client) EgressPolicies() EgressPolicyInterface {
+	return newEgressPolicies(c)
 }
 
 func (c *SecurityV1alpha1Client) NetworkPolicies(namespace string) NetworkPolicyInterface {
