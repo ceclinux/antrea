@@ -76,6 +76,10 @@ func run(o *Options) error {
 
 	// Create Antrea Clientset for the given config.
 	antreaClientProvider := agent.NewAntreaClientProvider(o.config.AntreaClientConnection, k8sClient)
+	go func() {
+		time.Sleep(10 * time.Second)
+		fmt.Printf("hoho")
+	}()
 
 	// Register Antrea Agent metrics if EnablePrometheusMetrics is set
 	if o.config.EnablePrometheusMetrics {

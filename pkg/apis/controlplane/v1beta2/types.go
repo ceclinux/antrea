@@ -25,7 +25,6 @@ import (
 
 // +genclient
 // +genclient:nonNamespaced
-// +genclient:onlyVerbs=list,get,watch
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // AppliedToGroup is the message format of antrea/pkg/controller/types.AppliedToGroup in an API response.
 type AppliedToGroup struct {
@@ -345,7 +344,7 @@ type GroupAssociation struct {
 }
 
 // +genclient
-// +genclient:onlyVerbs=list,get,watch
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicy struct {
 	metav1.TypeMeta `json:",inline"`

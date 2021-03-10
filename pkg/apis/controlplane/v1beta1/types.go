@@ -309,7 +309,7 @@ type NetworkPolicyStats struct {
 }
 
 // +genclient
-// +genclient:onlyVerbs=list,get,watch
+// +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressPolicy struct {
 	metav1.TypeMeta `json:",inline"`
