@@ -76,10 +76,35 @@ func run(o *Options) error {
 
 	// Create Antrea Clientset for the given config.
 	antreaClientProvider := agent.NewAntreaClientProvider(o.config.AntreaClientConnection, k8sClient)
-	go func() {
-		time.Sleep(10 * time.Second)
-		fmt.Printf("hoho")
-	}()
+	// go func() {
+	// attempts := 0
+	// stopCh := signals.RegisterSignalHandlers()
+
+	// klog.Infof("oooooooooooo")
+	// klog.Infof("llllllllllllll")
+	// if err := wait.PollImmediateUntil(200*time.Millisecond, func() (bool, error) {
+	// 	if attempts%10 == 0 {
+	// 		klog.Info("Waiting for Antrea client to be ready")
+	// 	}
+	// 	if _, err := antreaClientProvider.GetAntreaClient(); err != nil {
+	// 		attempts++
+	// 		return false, nil
+	// 	}
+	// 	return true, nil
+	// }, stopCh); err != nil {
+	// 	klog.Info("Stopped waiting for Antrea client")
+	// 	return err
+	// }
+	// ac, err := antreaClientProvider.GetAntreaClient()
+
+	// egressPolicy := &v1beta2.EgressPolicy{
+	// 	EgressGroup: "fwf",
+	// 	EgressIP:    "1.1.1.1",
+	// }
+	// ac.ControlplaneV1beta2().EgressPolicies().Create(context.TODO(), egressPolicy, metav1.CreateOptions{})
+	// time.Sleep(10 * time.Second)
+	// 	fmt.Printf("hoho")
+	// }()
 
 	// Register Antrea Agent metrics if EnablePrometheusMetrics is set
 	if o.config.EnablePrometheusMetrics {

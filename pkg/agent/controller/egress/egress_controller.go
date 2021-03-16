@@ -48,14 +48,14 @@ func NewEgressController(
 	options := metav1.ListOptions{
 		FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
 	}
-	c.networkPolicyWatcher = &watcher{
+	c.egressPolicyWatcher = &watcher{
 		objectType: "EgressPolicy",
 		watchFunc: func() (watch.Interface, error) {
 			antreaClient, err := c.antreaClientProvider.GetAntreaClient()
 			if err != nil {
 				return nil, err
 			}
-			return antreaClient.ControlplaneV1beta2().NetworkPolicies().Watch(context.TODO(), options)
+			return antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), options)
 		},
 		AddFunc: func(obj runtime.Object) error {
 			policy, ok := obj.(*v1beta2.EgressPolicy)
@@ -113,8 +113,22 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 		klog.Info("Stopped waiting for Antrea client")
 		return
 	}
+	klog.Infof("ssssssssssssss")
+	ac, _ := c.antreaClientProvider.GetAntreaClient()
+
+	egressPolicy := &v1beta2.EgressPolicy{
+		EgressGroup: "fwf",
+		EgressIP:    "1.1.1.1",
+	}
+	ac.ControlplaneV1beta2().EgressPolicies().Create(context.TODO(), egressPolicy, metav1.CreateOptions{})
+	t, err := ac.ControlplaneV1beta2().EgressPolicies().List(context.TODO(), metav1.ListOptions{})
+	if err != nil {
+		klog.Infof("%+v", err)
+	} else {
+		klog.Infof("%+v", t)
+	}
 	klog.Info("Antrea client is ready")
-	go wait.NonSlidingUntil(c.networkPolicyWatcher.watch, 5*time.Second, stopCh)
+	go wait.NonSlidingUntil(c.egressPolicyWatcher.watch, 5*time.Second, stopCh)
 	klog.Infof("Waiting for all watchers to complete full sync")
 	c.fullSyncGroup.Wait()
 	klog.Infof("All watchers have completed full sync, installing flows for init events")
@@ -242,7 +256,7 @@ loop:
 type Controller struct {
 	kubeClient           clientset.Interface
 	antreaClientProvider agent.AntreaClientProvider
-	networkPolicyWatcher *watcher
+	egressPolicyWatcher  *watcher
 	fullSyncGroup        sync.WaitGroup
 	queue                workqueue.RateLimitingInterface
 }

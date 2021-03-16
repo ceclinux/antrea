@@ -931,6 +931,18 @@ rules:
   - get
   - list
 - apiGroups:
+  - controlplane.antrea.tanzu.vmware.com
+  resources:
+  - egresspolicy
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
   - stats.antrea.tanzu.vmware.com
   resources:
   - networkpolicystats
