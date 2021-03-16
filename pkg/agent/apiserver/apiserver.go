@@ -33,6 +33,7 @@ import (
 	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/addressgroup"
 	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/agentinfo"
 	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/appliedtogroup"
+	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/egresspolicy"
 	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/networkpolicy"
 	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/ovsflows"
 	"github.com/vmware-tanzu/antrea/pkg/agent/apiserver/handlers/ovstracing"
@@ -74,6 +75,7 @@ func installHandlers(aq agentquerier.AgentQuerier, npq querier.AgentNetworkPolic
 	s.Handler.NonGoRestfulMux.HandleFunc("/agentinfo", agentinfo.HandleFunc(aq))
 	s.Handler.NonGoRestfulMux.HandleFunc("/podinterfaces", podinterface.HandleFunc(aq))
 	s.Handler.NonGoRestfulMux.HandleFunc("/networkpolicies", networkpolicy.HandleFunc(aq))
+	s.Handler.NonGoRestfulMux.HandleFunc("/egresspolicies", egresspolicy.HandleFunc(aq))
 	s.Handler.NonGoRestfulMux.HandleFunc("/appliedtogroups", appliedtogroup.HandleFunc(npq))
 	s.Handler.NonGoRestfulMux.HandleFunc("/addressgroups", addressgroup.HandleFunc(npq))
 	s.Handler.NonGoRestfulMux.HandleFunc("/ovsflows", ovsflows.HandleFunc(aq))

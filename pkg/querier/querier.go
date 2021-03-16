@@ -38,6 +38,10 @@ type AgentNetworkPolicyInfoQuerier interface {
 	GetNetworkPolicyByRuleFlowID(ruleFlowID uint32) *cpv1beta.NetworkPolicyReference
 }
 
+type AgentEgressPolicyInfoQuerier interface {
+	GetEgressPolicies(npFilter *EgressPolicyQueryFilter) []cpv1beta.EgressPolicy
+}
+
 type ControllerNetworkPolicyInfoQuerier interface {
 	NetworkPolicyInfoQuerier
 	GetConnectedAgentNum() int
@@ -89,4 +93,17 @@ type NetworkPolicyQueryFilter struct {
 	Pod string
 	// The type of the original NetworkPolicy that the internal NetworkPolicy is created for.(K8sNP, CNP, ANP)
 	SourceType cpv1beta.NetworkPolicyType
+}
+
+type EgressPolicyQueryFilter struct {
+	// The Name of the controlplane network policy. If this field is set then
+	// none of the other fields can be.
+	Name string
+	// The Name of the original network policy.
+	SourceName string
+	// The namespace of the original Namespace that the internal NetworkPolicy is created for.
+	Namespace string
+	// Name of the pod that the network policy is applied on.
+	Pod string
+	// The type of the original NetworkPolicy that the internal NetworkPolicy is created for.(K8sNP, CNP, ANP)
 }

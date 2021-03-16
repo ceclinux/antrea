@@ -44,6 +44,7 @@ type AgentQuerier interface {
 	GetOVSCtlClient() ovsctl.OVSCtlClient
 	GetProxier() proxy.Proxier
 	GetNetworkPolicyInfoQuerier() querier.AgentNetworkPolicyInfoQuerier
+	GetEgressPolicyInfoQuerier() querier.AgentEgressPolicyInfoQuerier
 }
 
 type agentQuerier struct {
@@ -55,6 +56,7 @@ type agentQuerier struct {
 	ovsBridgeClient          ovsconfig.OVSBridgeClient
 	proxier                  proxy.Proxier
 	networkPolicyInfoQuerier querier.AgentNetworkPolicyInfoQuerier
+	egressPolicyInfoQuerier  querier.AgentEgressPolicyInfoQuerier
 	apiPort                  int
 }
 
@@ -119,6 +121,10 @@ func (aq *agentQuerier) GetProxier() proxy.Proxier {
 // GetNetworkPolicyInfoQuerier returns AgentNetworkPolicyInfoQuerier.
 func (aq agentQuerier) GetNetworkPolicyInfoQuerier() querier.AgentNetworkPolicyInfoQuerier {
 	return aq.networkPolicyInfoQuerier
+}
+
+func (aq agentQuerier) GetEgressPolicyInfoQuerier() querier.AgentNetworkPolicyInfoQuerier {
+	return aq.egressPolicyInfoQuerier
 }
 
 // getOVSVersion gets current OVS version.

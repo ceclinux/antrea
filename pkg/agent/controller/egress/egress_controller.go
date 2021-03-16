@@ -53,9 +53,15 @@ func NewEgressController(
 		watchFunc: func() (watch.Interface, error) {
 			antreaClient, err := c.antreaClientProvider.GetAntreaClient()
 			if err != nil {
+				klog.Infof("%#v", err)
 				return nil, err
 			}
-			return antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), options)
+			tt, err := antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), options)
+			if err != nil {
+				klog.Infof("%#v", err)
+				return nil, err
+			}
+			return tt, err
 		},
 		AddFunc: func(obj runtime.Object) error {
 			policy, ok := obj.(*v1beta2.EgressPolicy)

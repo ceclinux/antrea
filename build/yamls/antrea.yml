@@ -932,8 +932,9 @@ rules:
   - list
 - apiGroups:
   - controlplane.antrea.tanzu.vmware.com
+  - networking.antrea.tanzu.vmware.com
   resources:
-  - egresspolicy
+  - egresspolicies
   verbs:
   - get
   - list

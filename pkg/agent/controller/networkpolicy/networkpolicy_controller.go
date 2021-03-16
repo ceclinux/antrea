@@ -141,7 +141,13 @@ func NewNetworkPolicyController(antreaClientGetter agent.AntreaClientProvider,
 			if err != nil {
 				return nil, err
 			}
-			return antreaClient.ControlplaneV1beta2().NetworkPolicies().Watch(context.TODO(), options)
+			tt, err := antreaClient.ControlplaneV1beta2().NetworkPolicies().Watch(context.TODO(), options)
+			if err != nil {
+				klog.Infof("%#v", err)
+				return nil, err
+			}
+			klog.Infof("%#v", tt)
+			return tt, err
 		},
 		AddFunc: func(obj runtime.Object) error {
 			policy, ok := obj.(*v1beta2.NetworkPolicy)

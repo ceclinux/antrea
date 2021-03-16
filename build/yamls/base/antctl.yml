@@ -17,9 +17,15 @@ rules:
       - networkpolicies
       - appliedtogroups
       - addressgroups
+      - egresspolicies
     verbs:
       - get
       - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
   - apiGroups:
       - stats.antrea.tanzu.vmware.com
     resources:
