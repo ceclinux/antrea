@@ -103,6 +103,7 @@ func (w *storeWatcher) add(event storage.InternalEvent, timer *time.Timer) bool 
 // process first sends initEvents and then keeps sending events got from channel input
 // if they are newer than the specified resourceVersion.
 func (w *storeWatcher) process(ctx context.Context, initEvents []storage.InternalEvent, resourceVersion uint64) {
+	klog.Infof("ggggggggggggg")
 	for _, event := range initEvents {
 		w.sendWatchEvent(event, true)
 	}

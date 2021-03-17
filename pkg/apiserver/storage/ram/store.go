@@ -238,6 +238,8 @@ func (s *store) Watch(ctx context.Context, key string, labelSelector labels.Sele
 	}
 
 	allObjects := s.storage.List()
+	klog.Infof("%#v", allObjects)
+
 	initEvents := make([]antreastorage.InternalEvent, 0, len(allObjects))
 	for _, obj := range allObjects {
 		// Objects retrieved from storage have been verified with keyFunc when they are inserted.

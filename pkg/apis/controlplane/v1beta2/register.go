@@ -39,6 +39,10 @@ var (
 		Group:    SchemeGroupVersion.Group,
 		Version:  SchemeGroupVersion.Version,
 		Resource: "networkpolicies"}
+	EgressPolicyVersionResource = schema.GroupVersionResource{
+		Group:    SchemeGroupVersion.Group,
+		Version:  SchemeGroupVersion.Version,
+		Resource: "egresspolicies"}
 	GroupVersionResource = schema.GroupVersionResource{
 		Group:    SchemeGroupVersion.Group,
 		Version:  SchemeGroupVersion.Version,
@@ -66,6 +70,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&AddressGroup{},
 		&AddressGroupPatch{},
 		&AddressGroupList{},
+		&EgressPolicy{},
+		&EgressPolicyList{},
 		&NetworkPolicy{},
 		&NetworkPolicyList{},
 		&NetworkPolicyStatus{},

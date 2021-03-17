@@ -14,6 +14,7 @@ import (
 
 	"github.com/vmware-tanzu/antrea/pkg/agent"
 	"github.com/vmware-tanzu/antrea/pkg/apis/controlplane/v1beta2"
+	"github.com/vmware-tanzu/antrea/pkg/querier"
 	"k8s.io/klog"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -257,6 +258,16 @@ loop:
 			eventCount++
 		}
 	}
+}
+
+func (c *Controller) GetEgressPolicies(npFilter *querier.EgressPolicyQueryFilter) []v1beta2.EgressPolicy {
+	s := []v1beta2.EgressPolicy{
+		{
+			EgressGroup: "wowowo",
+			EgressIP:    "2,2,2,2",
+		},
+	}
+	return s
 }
 
 type Controller struct {

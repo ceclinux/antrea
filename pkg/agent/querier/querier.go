@@ -69,6 +69,7 @@ func NewAgentQuerier(
 	ovsBridgeClient ovsconfig.OVSBridgeClient,
 	proxier proxy.Proxier,
 	networkPolicyInfoQuerier querier.AgentNetworkPolicyInfoQuerier,
+	egressPolicyInfoQuerier querier.AgentEgressPolicyInfoQuerier,
 	apiPort int,
 ) *agentQuerier {
 	return &agentQuerier{
@@ -80,6 +81,7 @@ func NewAgentQuerier(
 		ovsBridgeClient:          ovsBridgeClient,
 		proxier:                  proxier,
 		networkPolicyInfoQuerier: networkPolicyInfoQuerier,
+		egressPolicyInfoQuerier:  egressPolicyInfoQuerier,
 		apiPort:                  apiPort}
 }
 
@@ -123,7 +125,7 @@ func (aq agentQuerier) GetNetworkPolicyInfoQuerier() querier.AgentNetworkPolicyI
 	return aq.networkPolicyInfoQuerier
 }
 
-func (aq agentQuerier) GetEgressPolicyInfoQuerier() querier.AgentNetworkPolicyInfoQuerier {
+func (aq agentQuerier) GetEgressPolicyInfoQuerier() querier.AgentEgressPolicyInfoQuerier {
 	return aq.egressPolicyInfoQuerier
 }
 

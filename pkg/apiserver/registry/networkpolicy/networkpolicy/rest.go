@@ -24,6 +24,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/apiserver/pkg/registry/rest"
+	"k8s.io/klog"
 
 	"github.com/vmware-tanzu/antrea/pkg/apis/controlplane"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy"
@@ -94,6 +95,7 @@ func (r *REST) NamespaceScoped() bool {
 }
 
 func (r *REST) Watch(ctx context.Context, options *internalversion.ListOptions) (watch.Interface, error) {
+	klog.Infof("start watching")
 	key, label, field := networkpolicy.GetSelectors(options)
 	return r.networkPolicyStore.Watch(ctx, key, label, field)
 }

@@ -50,6 +50,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&v1beta1.AddressGroupList{},
 		&v1beta1.NetworkPolicy{},
 		&v1beta1.NetworkPolicyList{},
+		&v1beta1.EgressPolicy{},
+		&v1beta1.EgressPolicyList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)

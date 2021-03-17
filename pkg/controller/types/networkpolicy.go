@@ -97,3 +97,9 @@ type NetworkPolicy struct {
 	// Must be false for K8s NetworkPolicy.
 	AppliedToPerRule bool
 }
+
+type EgressPolicy struct {
+	EgressGroup string
+
+	EgressIP string
+}

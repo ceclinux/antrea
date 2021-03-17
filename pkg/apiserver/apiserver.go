@@ -44,6 +44,7 @@ import (
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy/addressgroup"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy/appliedtogroup"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy/clustergroupmember"
+	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy/egresspolicy"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy/groupassociation"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/networkpolicy/networkpolicy"
 	"github.com/vmware-tanzu/antrea/pkg/apiserver/registry/stats/antreaclusternetworkpolicystats"
@@ -82,6 +83,7 @@ type ExtraConfig struct {
 	addressGroupStore             storage.Interface
 	appliedToGroupStore           storage.Interface
 	networkPolicyStore            storage.Interface
+	egressPolicyStore             storage.Interface
 	controllerQuerier             querier.ControllerQuerier
 	endpointQuerier               controllernetworkpolicy.EndpointQuerier
 	networkPolicyController       *controllernetworkpolicy.NetworkPolicyController
@@ -119,7 +121,7 @@ type completedConfig struct {
 
 func NewConfig(
 	genericConfig *genericapiserver.Config,
-	addressGroupStore, appliedToGroupStore, networkPolicyStore, groupStore storage.Interface,
+	addressGroupStore, appliedToGroupStore, networkPolicyStore, egressPolicyStore, groupStore storage.Interface,
 	caCertController *certificate.CACertController,
 	statsAggregator *stats.Aggregator,
 	controllerQuerier querier.ControllerQuerier,
@@ -132,6 +134,7 @@ func NewConfig(
 			addressGroupStore:             addressGroupStore,
 			appliedToGroupStore:           appliedToGroupStore,
 			networkPolicyStore:            networkPolicyStore,
+			egressPolicyStore:             egressPolicyStore,
 			caCertController:              caCertController,
 			statsAggregator:               statsAggregator,
 			controllerQuerier:             controllerQuerier,
@@ -150,6 +153,7 @@ func installAPIGroup(s *APIServer, c completedConfig) error {
 	addressGroupStorage := addressgroup.NewREST(c.extraConfig.addressGroupStore)
 	appliedToGroupStorage := appliedtogroup.NewREST(c.extraConfig.appliedToGroupStore)
 	networkPolicyStorage := networkpolicy.NewREST(c.extraConfig.networkPolicyStore)
+	egressPolicyStorage := egresspolicy.NewREST(c.extraConfig.egressPolicyStore)
 	networkPolicyStatusStorage := networkpolicy.NewStatusREST(c.extraConfig.networkPolicyStatusController)
 	clusterGroupMembershipStorage := clustergroupmember.NewREST(c.extraConfig.networkPolicyController)
 	groupAssociationStorage := groupassociation.NewREST(c.extraConfig.networkPolicyController)
@@ -159,12 +163,14 @@ func installAPIGroup(s *APIServer, c completedConfig) error {
 	cpv1beta1Storage["addressgroups"] = addressGroupStorage
 	cpv1beta1Storage["appliedtogroups"] = appliedToGroupStorage
 	cpv1beta1Storage["networkpolicies"] = networkPolicyStorage
+	cpv1beta1Storage["egresspolicies"] = egressPolicyStorage
 	cpv1beta1Storage["nodestatssummaries"] = nodeStatsSummaryStorage
 	cpGroup.VersionedResourcesStorageMap["v1beta1"] = cpv1beta1Storage
 	cpv1beta2Storage := map[string]rest.Storage{}
 	cpv1beta2Storage["addressgroups"] = addressGroupStorage
 	cpv1beta2Storage["appliedtogroups"] = appliedToGroupStorage
 	cpv1beta2Storage["networkpolicies"] = networkPolicyStorage
+	cpv1beta2Storage["egresspolicies"] = egressPolicyStorage
 	cpv1beta2Storage["networkpolicies/status"] = networkPolicyStatusStorage
 	cpv1beta2Storage["nodestatssummaries"] = nodeStatsSummaryStorage
 	cpv1beta2Storage["groupassociations"] = groupAssociationStorage
@@ -178,6 +184,7 @@ func installAPIGroup(s *APIServer, c completedConfig) error {
 	networkingStorage["addressgroups"] = addressGroupStorage
 	networkingStorage["appliedtogroups"] = appliedToGroupStorage
 	networkingStorage["networkpolicies"] = networkPolicyStorage
+	networkingStorage["egresspolicies"] = egressPolicyStorage
 	networkingGroup.VersionedResourcesStorageMap["v1beta1"] = networkingStorage
 
 	systemGroup := genericapiserver.NewDefaultAPIGroupInfo(system.GroupName, Scheme, metav1.ParameterCodec, Codecs)

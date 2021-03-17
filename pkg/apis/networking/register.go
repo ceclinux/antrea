@@ -53,6 +53,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&controlplane.AddressGroup{},
 		&controlplane.AddressGroupPatch{},
 		&controlplane.AddressGroupList{},
+		&controlplane.EgressPolicy{},
+		&controlplane.EgressPolicyList{},
 		&controlplane.NetworkPolicy{},
 		&controlplane.NetworkPolicyList{},
 	)

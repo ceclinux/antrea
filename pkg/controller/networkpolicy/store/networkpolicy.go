@@ -122,6 +122,8 @@ func ToNetworkPolicyMsg(in *types.NetworkPolicy, out *controlplane.NetworkPolicy
 	out.TierPriority = in.TierPriority
 }
 
+
+
 // NetworkPolicyKeyFunc knows how to get the key of a NetworkPolicy.
 func NetworkPolicyKeyFunc(obj interface{}) (string, error) {
 	policy, ok := obj.(*types.NetworkPolicy)
@@ -168,3 +170,4 @@ func NewNetworkPolicyStore() storage.Interface {
 	}
 	return ram.NewStore(NetworkPolicyKeyFunc, indexers, genNetworkPolicyEvent, keyAndSpanSelectFunc, func() runtime.Object { return new(controlplane.NetworkPolicy) })
 }
+

@@ -118,6 +118,7 @@ func run(o *Options) error {
 	addressGroupStore := store.NewAddressGroupStore()
 	appliedToGroupStore := store.NewAppliedToGroupStore()
 	networkPolicyStore := store.NewNetworkPolicyStore()
+	egressPolicyStore := store.NewEgressPolicyStore()
 	groupStore := store.NewGroupStore()
 
 	networkPolicyController := networkpolicy.NewNetworkPolicyController(client,
@@ -172,6 +173,7 @@ func run(o *Options) error {
 		addressGroupStore,
 		appliedToGroupStore,
 		networkPolicyStore,
+		egressPolicyStore,
 		groupStore,
 		controllerQuerier,
 		endpointQuerier,
@@ -241,6 +243,7 @@ func createAPIServerConfig(kubeconfig string,
 	addressGroupStore storage.Interface,
 	appliedToGroupStore storage.Interface,
 	networkPolicyStore storage.Interface,
+	egressPolicyStore storage.Interface,
 	groupStore storage.Interface,
 	controllerQuerier querier.ControllerQuerier,
 	endpointQuerier networkpolicy.EndpointQuerier,
@@ -298,6 +301,7 @@ func createAPIServerConfig(kubeconfig string,
 		addressGroupStore,
 		appliedToGroupStore,
 		networkPolicyStore,
+		egressPolicyStore,
 		groupStore,
 		caCertController,
 		statsAggregator,

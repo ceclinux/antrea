@@ -333,6 +333,7 @@ func run(o *Options) error {
 		ovsBridgeClient,
 		proxier,
 		networkPolicyController,
+		egressController,
 		o.config.APIPort)
 
 	agentMonitor := monitor.NewAgentMonitor(crdClient, agentQuerier)
