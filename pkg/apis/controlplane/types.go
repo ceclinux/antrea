@@ -324,7 +324,7 @@ type EgressPolicyList struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type EgressGroupList struct {
+type EgressGroupPatchList struct {
 	metav1.TypeMeta
 	metav1.ListMeta
 	Items []EgressGroupPatch
