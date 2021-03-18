@@ -241,15 +241,15 @@ func (m *ClusterGroupMembers) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_ClusterGroupMembers proto.InternalMessageInfo
 
-func (m *EgressGroup) Reset()      { *m = EgressGroup{} }
-func (*EgressGroup) ProtoMessage() {}
-func (*EgressGroup) Descriptor() ([]byte, []int) {
+func (m *EgressGroupPatch) Reset()      { *m = EgressGroupPatch{} }
+func (*EgressGroupPatch) ProtoMessage() {}
+func (*EgressGroupPatch) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d31898dc88dbbf6e, []int{7}
 }
-func (m *EgressGroup) XXX_Unmarshal(b []byte) error {
+func (m *EgressGroupPatch) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EgressGroup) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EgressGroupPatch) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	b = b[:cap(b)]
 	n, err := m.MarshalToSizedBuffer(b)
 	if err != nil {
@@ -257,13 +257,13 @@ func (m *EgressGroup) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 	}
 	return b[:n], nil
 }
-func (m *EgressGroup) XXX_Merge(src proto.Message) {
+func (m *EgressGroupPatch) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_EgressGroup.Merge(m, src)
 }
-func (m *EgressGroup) XXX_Size() int {
+func (m *EgressGroupPatch) XXX_Size() int {
 	return m.Size()
 }
-func (m *EgressGroup) XXX_DiscardUnknown() {
+func (m *EgressGroupPatch) XXX_DiscardUnknown() {
 	xxx_messageInfo_EgressGroup.DiscardUnknown(m)
 }
 
@@ -865,7 +865,7 @@ func init() {
 	proto.RegisterType((*AppliedToGroupList)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.AppliedToGroupList")
 	proto.RegisterType((*AppliedToGroupPatch)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.AppliedToGroupPatch")
 	proto.RegisterType((*ClusterGroupMembers)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.ClusterGroupMembers")
-	proto.RegisterType((*EgressGroup)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.EgressGroup")
+	proto.RegisterType((*EgressGroupPatch)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.EgressGroup")
 	proto.RegisterType((*EgressPolicy)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.EgressPolicy")
 	proto.RegisterType((*EgressPolicyList)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.EgressPolicyList")
 	proto.RegisterType((*ExternalEntityReference)(nil), "github.com.vmware_tanzu.antrea.pkg.apis.controlplane.v1beta2.ExternalEntityReference")
@@ -1369,7 +1369,7 @@ func (m *ClusterGroupMembers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *EgressGroup) Marshal() (dAtA []byte, err error) {
+func (m *EgressGroupPatch) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1379,12 +1379,12 @@ func (m *EgressGroup) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EgressGroup) MarshalTo(dAtA []byte) (int, error) {
+func (m *EgressGroupPatch) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EgressGroup) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EgressGroupPatch) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2565,7 +2565,7 @@ func (m *ClusterGroupMembers) Size() (n int) {
 	return n
 }
 
-func (m *EgressGroup) Size() (n int) {
+func (m *EgressGroupPatch) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -3101,7 +3101,7 @@ func (this *ClusterGroupMembers) String() string {
 	}, "")
 	return s
 }
-func (this *EgressGroup) String() string {
+func (this *EgressGroupPatch) String() string {
 	if this == nil {
 		return "nil"
 	}
@@ -4344,7 +4344,7 @@ func (m *ClusterGroupMembers) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EgressGroup) Unmarshal(dAtA []byte) error {
+func (m *EgressGroupPatch) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
