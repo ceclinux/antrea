@@ -336,6 +336,6 @@ type EgressGroupPatch struct {
 	// Standard metadata of the object.
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	// GroupMembers is a list of resources selected by this group.
-	AddedGroupMembers   []GroupMember `json:"groupMembers" protobuf:"bytes,2,rep,name=groupMembers"`
-	RemovedGroupMembers []GroupMember `json:"groupMembers" protobuf:"bytes,3,rep,name=groupMembers"`
+	AddedGroupMembers   []GroupMember `json:"groupMembers" protobuf:"bytes,2,rep,name=addedGroupMembers"`
+	RemovedGroupMembers []GroupMember `json:"groupMembers" protobuf:"bytes,3,rep,name=removedGroupMembers"`
 }
