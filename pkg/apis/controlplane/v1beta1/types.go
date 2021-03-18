@@ -301,10 +301,10 @@ type EgressPolicyList struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type EgressGroupPatchList struct {
+type EgressGroupList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-	Items           []EgressGroupPatch `json:"items" protobuf:"bytes,2,rep,name=items"`
+	Items           []EgressGroup `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 // NetworkPolicyStats contains the information and traffic stats of a NetworkPolicy.
@@ -331,7 +331,7 @@ type EgressPolicy struct {
 // +genclient
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type EgressGroupPatch struct {
+type EgressGroup struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard metadata of the object.
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`

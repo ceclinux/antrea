@@ -327,7 +327,7 @@ type EgressPolicyList struct {
 type EgressGroupPatchList struct {
 	metav1.TypeMeta
 	metav1.ListMeta
-	Items []EgressGroupPatch
+	Items []EgressGroup
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -352,7 +352,7 @@ type EgressPolicy struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type EgressGroupPatch struct {
+type EgressGroup struct {
 	metav1.TypeMeta
 	metav1.ObjectMeta
 	// GroupMembers is a list of resources selected by this group.

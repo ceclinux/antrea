@@ -63,7 +63,7 @@ func NewEgressController(
 			}
 			return tt, err
 		}, AddFunc: func(obj runtime.Object) error {
-			policy, ok := obj.(*v1beta2.EgressGroupPatch)
+			policy, ok := obj.(*v1beta2.EgressGroup)
 
 			if !ok {
 				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
