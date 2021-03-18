@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../kind
+images:
+- name: antrea
+  newName: projects.registry.vmware.com/antrea/antrea-ubuntu
+  newTag: latest
+patches:
+- path: agentImagePullPolicy.yml
+- path: controllerImagePullPolicy.yml

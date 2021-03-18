@@ -48,7 +48,7 @@ func NewEgressController(
 	// options := metav1.ListOptions{
 	// 	FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
 	// }
-	c.EgressGroupPatchWatcher = &watcher{
+	c.EgressGroupWatcher = &watcher{
 		objectType: "EgressGroup",
 		watchFunc: func() (watch.Interface, error) {
 			antreaClient, err := c.antreaClientProvider.GetAntreaClient()
@@ -344,7 +344,7 @@ type Controller struct {
 	kubeClient           clientset.Interface
 	antreaClientProvider agent.AntreaClientProvider
 	egressPolicyWatcher  *watcher
-	EgressGroupPatchWatcher   *watcher
+	EgressGroupWatcher   *watcher
 	fullSyncGroup        sync.WaitGroup
 	queue                workqueue.RateLimitingInterface
 }
