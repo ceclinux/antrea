@@ -334,6 +334,13 @@ type EgressPolicyList struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type EgressGroupList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	Items           []EgressGroup `json:"items" protobuf:"bytes,2,rep,name=items"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // GroupAssociation is the message format in an API response for groupassociation queries.
 type GroupAssociation struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -356,10 +363,14 @@ type EgressPolicy struct {
 	EgressIP string `json:"egressIP,omitempty" protobuf:"bytes,3,opt,name=egressIP"`
 }
 
+// +genclient
+// +genclient:nonNamespaced
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressGroup struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard metadata of the object.
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 	// GroupMembers is a list of resources selected by this group.
-	GroupMembers []GroupMember `json:"groupMembers" protobuf:"bytes,2,rep,name=groupMembers"`
+	AddedGroupMembers   []GroupMember `json:"groupMembers" protobuf:"bytes,2,rep,name=groupMembers"`
+	RemovedGroupMembers []GroupMember `json:"groupMembers" protobuf:"bytes,3,rep,name=groupMembers"`
 }

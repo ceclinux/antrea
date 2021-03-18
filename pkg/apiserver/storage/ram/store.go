@@ -223,6 +223,7 @@ func (s *store) Delete(key string) error {
 
 // Watch creates a watcher based on the key, label selector and field selector.
 func (s *store) Watch(ctx context.Context, key string, labelSelector labels.Selector, fieldSelector fields.Selector) (watch.Interface, error) {
+	klog.Infof("%#v", key)
 	if s.genEventFunc == nil {
 		return nil, fmt.Errorf("genEventFunc must be set to support watching")
 	}

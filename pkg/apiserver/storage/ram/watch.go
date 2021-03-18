@@ -104,6 +104,7 @@ func (w *storeWatcher) add(event storage.InternalEvent, timer *time.Timer) bool 
 // if they are newer than the specified resourceVersion.
 func (w *storeWatcher) process(ctx context.Context, initEvents []storage.InternalEvent, resourceVersion uint64) {
 	klog.Infof("ggggggggggggg")
+	klog.Infof("%#v", initEvents)
 	for _, event := range initEvents {
 		w.sendWatchEvent(event, true)
 	}
@@ -124,6 +125,7 @@ func (w *storeWatcher) process(ctx context.Context, initEvents []storage.Interna
 				return
 			}
 			if event.GetResourceVersion() > resourceVersion {
+				klog.Infof("%#v\n", event)
 				w.sendWatchEvent(event, false)
 			}
 		case <-ctx.Done():

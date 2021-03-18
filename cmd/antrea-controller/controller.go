@@ -132,6 +132,7 @@ func run(o *Options) error {
 		anpInformer,
 		tierInformer,
 		cgInformer,
+		egressPolicyStore,
 		addressGroupStore,
 		appliedToGroupStore,
 		networkPolicyStore,

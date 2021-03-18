@@ -60,12 +60,19 @@ rules:
       - networkpolicies
       - appliedtogroups
       - addressgroups
-      - egresspolicies
     verbs:
       - get
       - watch
       - list
+  - apiGroups:
+      - controlplane.antrea.tanzu.vmware.com
+    resources:
+      - egresspolicies
+    verbs:
       - create
+      - get
+      - watch
+      - list
   - apiGroups:
       - controlplane.antrea.tanzu.vmware.com
     resources:

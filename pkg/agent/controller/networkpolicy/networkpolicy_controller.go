@@ -141,6 +141,12 @@ func NewNetworkPolicyController(antreaClientGetter agent.AntreaClientProvider,
 			if err != nil {
 				return nil, err
 			}
+			klog.Infof("Getttttinggg")
+			_, err1 := antreaClient.ControlplaneV1beta2().NetworkPolicies().Get(context.TODO(), "love", metav1.GetOptions{})
+			if err1 != nil {
+				klog.Infof("%#v", err)
+				// return nil, err
+			}
 			tt, err := antreaClient.ControlplaneV1beta2().NetworkPolicies().Watch(context.TODO(), options)
 			if err != nil {
 				klog.Infof("%#v", err)

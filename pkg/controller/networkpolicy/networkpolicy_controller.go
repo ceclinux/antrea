@@ -188,6 +188,7 @@ type NetworkPolicyController struct {
 	addressGroupStore storage.Interface
 	// appliedToGroupStore is the storage where the populated AppliedTo Groups are stored.
 	appliedToGroupStore storage.Interface
+	egressPolicyStore   storage.Interface
 	// internalNetworkPolicyStore is the storage where the populated internal Network Policy are stored.
 	internalNetworkPolicyStore storage.Interface
 	// internalGroupStore is a simple store which maintains the internal Group types which can be later
@@ -235,6 +236,7 @@ func NewNetworkPolicyController(kubeClient clientset.Interface,
 	cgInformer corev1a2informers.ClusterGroupInformer,
 	addressGroupStore storage.Interface,
 	appliedToGroupStore storage.Interface,
+	egressPolicyStore storage.Interface,
 	internalNetworkPolicyStore storage.Interface,
 	internalGroupStore storage.Interface) *NetworkPolicyController {
 	n := &NetworkPolicyController{
@@ -254,6 +256,7 @@ func NewNetworkPolicyController(kubeClient clientset.Interface,
 		networkPolicyListerSynced:  networkPolicyInformer.Informer().HasSynced,
 		addressGroupStore:          addressGroupStore,
 		appliedToGroupStore:        appliedToGroupStore,
+		egressPolicyStore:          egressPolicyStore,
 		internalNetworkPolicyStore: internalNetworkPolicyStore,
 		internalGroupStore:         internalGroupStore,
 		appliedToGroupQueue:        workqueue.NewNamedRateLimitingQueue(workqueue.NewItemExponentialFailureRateLimiter(minRetryDelay, maxRetryDelay), "appliedToGroup"),
@@ -441,6 +444,10 @@ func (n *NetworkPolicyController) GetAddressGroupNum() int {
 
 func (n *NetworkPolicyController) GetAppliedToGroupNum() int {
 	return len(n.appliedToGroupStore.List())
+}
+
+func (n *NetworkPolicyController) GetEgressPolicyNum() int {
+	return len(n.egressPolicyStore.List())
 }
 
 // GetConnectedAgentNum gets the number of Agents which are connected to this Controller.
@@ -662,6 +669,20 @@ func (n *NetworkPolicyController) createAddressGroup(peer networkingv1.NetworkPo
 	return normalizedUID
 }
 
+func (n *NetworkPolicyController) createEgressPolicy() string {
+	klog.Infof("zzzzzzzzzzzzz")
+
+	// Create an AddressGroup object per Peer object.
+	addressGroup := &antreatypes.EgressPolicy{
+		EgressIP:    "3.3.3.3",
+		EgressGroup: "wwwww",
+	}
+	normalizedUID := getNormalizedUID(addressGroup.EgressGroup)
+
+	n.addressGroupStore.Create(addressGroup)
+	return normalizedUID
+}
+
 // toAntreaProtocol converts a v1.Protocol object to an Antrea Protocol object.
 func toAntreaProtocol(npProtocol *v1.Protocol) *controlplane.Protocol {
 	// If Protocol is unset, it must default to TCP protocol.
@@ -721,6 +742,7 @@ func toAntreaIPBlock(ipBlock *networkingv1.IPBlock) (*controlplane.IPBlock, erro
 // modified and store the updated instance, in case of an UPDATE event.
 func (n *NetworkPolicyController) processNetworkPolicy(np *networkingv1.NetworkPolicy) *antreatypes.NetworkPolicy {
 	appliedToGroupKey := n.createAppliedToGroup(np.Namespace, &np.Spec.PodSelector, nil, nil)
+	n.createEgressPolicy()
 	appliedToGroupNames := []string{appliedToGroupKey}
 	rules := make([]controlplane.NetworkPolicyRule, 0, len(np.Spec.Ingress)+len(np.Spec.Egress))
 	var ingressRuleExists, egressRuleExists bool
@@ -838,6 +860,7 @@ func (n *NetworkPolicyController) addNetworkPolicy(obj interface{}) {
 	internalNP := n.processNetworkPolicy(np)
 	klog.Infof("Creating new internal NetworkPolicy %s for %s", internalNP.Name, internalNP.SourceRef.ToString())
 	n.internalNetworkPolicyStore.Create(internalNP)
+
 	key := internalNetworkPolicyKeyFunc(np)
 	n.enqueueInternalNetworkPolicy(key)
 }

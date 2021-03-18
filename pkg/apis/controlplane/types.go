@@ -324,6 +324,13 @@ type EgressPolicyList struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type EgressGroupList struct {
+	metav1.TypeMeta
+	metav1.ListMeta
+	Items []EgressGroup
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // GroupAssociation is a list of GroupReferences for responses to groupassociation queries.
 type GroupAssociation struct {
 	metav1.TypeMeta
@@ -344,9 +351,11 @@ type EgressPolicy struct {
 	EgressIP string
 }
 
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type EgressGroup struct {
 	metav1.TypeMeta
 	metav1.ObjectMeta
 	// GroupMembers is a list of resources selected by this group.
-	GroupMembers []GroupMember
+	AddedGroupMembers   []GroupMember
+	RemovedGroupMembers []GroupMember
 }

@@ -9,7 +9,6 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"k8s.io/apimachinery/pkg/fields"
 	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/vmware-tanzu/antrea/pkg/agent"
@@ -46,8 +45,61 @@ func NewEgressController(
 	// 	FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
 	// }
 	c.fullSyncGroup.Add(3)
-	options := metav1.ListOptions{
-		FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
+	// options := metav1.ListOptions{
+	// 	FieldSelector: fields.OneTermEqualSelector("nodeName", nodeName).String(),
+	// }
+	c.EgressGroupWatcher = &watcher{
+		objectType: "EgressGroup",
+		watchFunc: func() (watch.Interface, error) {
+			antreaClient, err := c.antreaClientProvider.GetAntreaClient()
+			if err != nil {
+				klog.Infof("%#v", err)
+				return nil, err
+			}
+			tt, err := antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), metav1.ListOptions{})
+			if err != nil {
+				klog.Infof("%#v", err)
+				return nil, err
+			}
+			return tt, err
+		}, AddFunc: func(obj runtime.Object) error {
+			policy, ok := obj.(*v1beta2.EgressGroup)
+
+			if !ok {
+				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
+			}
+			klog.Infof("EgressPolicy %#v\n applied to Pods on this Node", policy)
+			return nil
+		},
+		UpdateFunc: func(obj runtime.Object) error {
+			_, ok := obj.(*v1beta2.EgressPolicy)
+			if !ok {
+				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
+			}
+			return nil
+		},
+		DeleteFunc: func(obj runtime.Object) error {
+			policy, ok := obj.(*v1beta2.EgressPolicy)
+			if !ok {
+				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
+			}
+			klog.Infof("EgressPolicy %#v\n no longer applied to Pods on this Node", policy)
+			return nil
+		},
+		ReplaceFunc: func(objs []runtime.Object) error {
+			policies := make([]*v1beta2.EgressPolicy, len(objs))
+			var ok bool
+			for i := range objs {
+				policies[i], ok = objs[i].(*v1beta2.EgressPolicy)
+				if !ok {
+					return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", objs[i])
+				}
+
+			}
+			return nil
+		},
+		fullSyncWaitGroup: &c.fullSyncGroup,
+		fullSynced:        false,
 	}
 	c.egressPolicyWatcher = &watcher{
 		objectType: "EgressPolicy",
@@ -57,7 +109,14 @@ func NewEgressController(
 				klog.Infof("%#v", err)
 				return nil, err
 			}
-			tt, err := antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), options)
+			// tt1, err1 := antreaClient.ControlplaneV1beta2().EgressPolicies().List(context.TODO(), metav1.ListOptions{})
+			// if err1 != nil {
+			// 	klog.Infof("%#v", err1)
+			// 	return nil, err1
+			// }
+			// klog.Infof("%#v", tt1)
+
+			tt, err := antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), metav1.ListOptions{})
 			if err != nil {
 				klog.Infof("%#v", err)
 				return nil, err
@@ -66,6 +125,7 @@ func NewEgressController(
 		},
 		AddFunc: func(obj runtime.Object) error {
 			policy, ok := obj.(*v1beta2.EgressPolicy)
+
 			if !ok {
 				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
 			}
@@ -127,13 +187,23 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 		EgressGroup: "fwf",
 		EgressIP:    "1.1.1.1",
 	}
-	ac.ControlplaneV1beta2().EgressPolicies().Create(context.TODO(), egressPolicy, metav1.CreateOptions{})
-	t, err := ac.ControlplaneV1beta2().EgressPolicies().List(context.TODO(), metav1.ListOptions{})
-	if err != nil {
-		klog.Infof("%+v", err)
-	} else {
-		klog.Infof("%+v", t)
-	}
+	go func() {
+		for {
+			time.Sleep(10 * time.Second)
+			t1, err1 := ac.ControlplaneV1beta2().EgressPolicies().Create(context.TODO(), egressPolicy, metav1.CreateOptions{})
+			if err1 != nil {
+				klog.Infof("%#v", err1)
+			} else {
+				klog.Infof("%#v", t1)
+			}
+			t, err := ac.ControlplaneV1beta2().EgressPolicies().List(context.TODO(), metav1.ListOptions{})
+			if err != nil {
+				klog.Infof("%#v", err)
+			} else {
+				klog.Infof("%#v", t)
+			}
+		}
+	}()
 	klog.Info("Antrea client is ready")
 	go wait.NonSlidingUntil(c.egressPolicyWatcher.watch, 5*time.Second, stopCh)
 	klog.Infof("Waiting for all watchers to complete full sync")
@@ -274,6 +344,7 @@ type Controller struct {
 	kubeClient           clientset.Interface
 	antreaClientProvider agent.AntreaClientProvider
 	egressPolicyWatcher  *watcher
+	EgressGroupWatcher   *watcher
 	fullSyncGroup        sync.WaitGroup
 	queue                workqueue.RateLimitingInterface
 }
