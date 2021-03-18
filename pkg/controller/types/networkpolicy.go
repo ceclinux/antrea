@@ -103,3 +103,8 @@ type EgressPolicy struct {
 
 	EgressIP string
 }
+
+type EgressGroupPatch struct {
+	AddedGroupMembers   []controlplane.GroupMember
+	RemovedGroupMembers []controlplane.GroupMember
+}
