@@ -56,7 +56,7 @@ func NewEgressController(
 				klog.Infof("%#v", err)
 				return nil, err
 			}
-			tt, err := antreaClient.ControlplaneV1beta2().EgressPolicies().Watch(context.TODO(), metav1.ListOptions{})
+			tt, err := antreaClient.ControlplaneV1beta2().EgressGroups().Watch(context.TODO(), metav1.ListOptions{})
 			if err != nil {
 				klog.Infof("%#v", err)
 				return nil, err
@@ -72,14 +72,14 @@ func NewEgressController(
 			return nil
 		},
 		UpdateFunc: func(obj runtime.Object) error {
-			_, ok := obj.(*v1beta2.EgressPolicy)
+			_, ok := obj.(*v1beta2.EgressGroup)
 			if !ok {
 				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
 			}
 			return nil
 		},
 		DeleteFunc: func(obj runtime.Object) error {
-			policy, ok := obj.(*v1beta2.EgressPolicy)
+			policy, ok := obj.(*v1beta2.EgressGroup)
 			if !ok {
 				return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", obj)
 			}
@@ -87,10 +87,10 @@ func NewEgressController(
 			return nil
 		},
 		ReplaceFunc: func(objs []runtime.Object) error {
-			policies := make([]*v1beta2.EgressPolicy, len(objs))
+			policies := make([]*v1beta2.EgressGroup, len(objs))
 			var ok bool
 			for i := range objs {
-				policies[i], ok = objs[i].(*v1beta2.EgressPolicy)
+				policies[i], ok = objs[i].(*v1beta2.EgressGroup)
 				if !ok {
 					return fmt.Errorf("cannot convert to *v1beta1.EgressPolicy: %v", objs[i])
 				}
@@ -207,7 +207,7 @@ func (c *Controller) Run(stopCh <-chan struct{}) {
 	klog.Info("Antrea client is ready")
 	go wait.NonSlidingUntil(c.egressPolicyWatcher.watch, 5*time.Second, stopCh)
 	klog.Infof("Waiting for all watchers to complete full sync")
-	c.fullSyncGroup.Wait()
+	// c.fullSyncGroup.Wait()
 	klog.Infof("All watchers have completed full sync, installing flows for init events")
 	// Batch install all rules in queue after fullSync is finished.
 	for i := 0; i < defaultWorkers; i++ {
