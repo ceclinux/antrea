@@ -20,6 +20,8 @@ type AddressGroupExpansion interface{}
 
 type AppliedToGroupExpansion interface{}
 
+type EgressGroupExpansion interface{}
+
 type EgressPolicyExpansion interface{}
 
 type NetworkPolicyExpansion interface{}

@@ -18,7 +18,6 @@ package v1beta2
 
 import (
 	"context"
-	"k8s.io/klog"
 	"time"
 
 	v1beta2 "github.com/vmware-tanzu/antrea/pkg/apis/controlplane/v1beta2"
@@ -95,16 +94,11 @@ func (c *egressPolicies) Watch(ctx context.Context, opts v1.ListOptions) (watch.
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
 	opts.Watch = true
-	t, err := c.client.Get().
+	return c.client.Get().
 		Resource("egresspolicies").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch(ctx)
-	if err != nil {
-		klog.Infof("%#v", err)
-
-	}
-	return t, err
 }
 
 // Create takes the representation of a egressPolicy and creates it.  Returns the server's representation of the egressPolicy, and an error, if there is any.

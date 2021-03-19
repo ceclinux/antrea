@@ -67,6 +67,20 @@ func (mr *MockAgentQuerierMockRecorder) GetAgentInfo(arg0, arg1 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAgentInfo", reflect.TypeOf((*MockAgentQuerier)(nil).GetAgentInfo), arg0, arg1)
 }
 
+// GetEgressPolicyInfoQuerier mocks base method
+func (m *MockAgentQuerier) GetEgressPolicyInfoQuerier() querier.AgentEgressPolicyInfoQuerier {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEgressPolicyInfoQuerier")
+	ret0, _ := ret[0].(querier.AgentEgressPolicyInfoQuerier)
+	return ret0
+}
+
+// GetEgressPolicyInfoQuerier indicates an expected call of GetEgressPolicyInfoQuerier
+func (mr *MockAgentQuerierMockRecorder) GetEgressPolicyInfoQuerier() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEgressPolicyInfoQuerier", reflect.TypeOf((*MockAgentQuerier)(nil).GetEgressPolicyInfoQuerier))
+}
+
 // GetInterfaceStore mocks base method
 func (m *MockAgentQuerier) GetInterfaceStore() interfacestore.InterfaceStore {
 	m.ctrl.T.Helper()

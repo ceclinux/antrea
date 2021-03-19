@@ -34,6 +34,10 @@ func (c *FakeControlplaneV1beta2) AppliedToGroups() v1beta2.AppliedToGroupInterf
 	return &FakeAppliedToGroups{c}
 }
 
+func (c *FakeControlplaneV1beta2) EgressGroups() v1beta2.EgressGroupInterface {
+	return &FakeEgressGroups{c}
+}
+
 func (c *FakeControlplaneV1beta2) EgressPolicies() v1beta2.EgressPolicyInterface {
 	return &FakeEgressPolicies{c}
 }
